@@ -1,6 +1,7 @@
 use std::fs::File;
 use notify::{Config, RecommendedWatcher, RecursiveMode, Watcher};
 use std::path::Path;
+use std::thread;
 use std::io::prelude::*;
 use std::io::{Write, BufReader, Error};
 use pulldown_cmark::{Parser, Options, html};
@@ -46,12 +47,50 @@ fn wrap_html(markdown_output: &str) -> String {
     wrapped_html
 }
 
-fn main() -> std::io::Result<()>{
 
-    let html_from_md = parse_markdown(&read_markdown()?);
-    let mut file = File::create("sample_output.html")?;
-    let wrapped_html = wrap_html(&html_from_md);
-    write!(file,"{wrapped_html}")?;
+fn main() {
+    let path = std::env::args()
+        .nth(1)
+        .expect("Argument 1 needs to be a path");
+
+    println!("Watching {path}");
+
+    // Start a separate thread to run the watch function
+    thread::spawn(|| {
+        if let Err(error) = watch(path) {
+            eprintln!("Error: {error:?}");
+        }
+    });
+
+    // Sleep indefinitely to keep the program running
+    loop {
+        thread::sleep(std::time::Duration::from_secs(1));
+    }
+}
+
+fn watch<P: AsRef<Path>>(path: P) -> notify::Result<()> {
+    let (tx, rx) = std::sync::mpsc::channel();
+    let mut watcher = RecommendedWatcher::new(tx, Config::default())?;
+    watcher.watch(path.as_ref(), RecursiveMode::Recursive)?;
+
+    for res in rx {
+        match res {
+            Ok(event) => {
+                println!("Change: {event:?}");
+                markdown_to_wrapped_html()?;
+            }
+            Err(error) => eprintln!("Error: {error:?}"),
+        }
+    }
+
     Ok(())
 }
 
+fn markdown_to_wrapped_html() -> std::io::Result<()>{
+    let html_from_md = parse_markdown(&read_markdown()?);
+    let mut file = File::create("sample_output.html")?;
+    let wrapped_html = wrap_html(&html_from_md);
+    println!("new change!");
+    write!(file,"{wrapped_html}")?;
+    Ok(())
+}

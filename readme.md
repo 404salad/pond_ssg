@@ -1,7 +1,11 @@
 pond — a minimal and fast static site generator
 ===
 
+### note
+when using vim `:set backupcopy=yes` for the watcher to work (realtime changes)
+
 ## goals
+- online editor
 - adding color themes
 - To make it standard markdown compatible
 - content first approach
@@ -12,6 +16,7 @@ pond — a minimal and fast static site generator
     - blogsite
     - theme
     - alignment
+- dockerizing
 
 ## tags 
 ```
