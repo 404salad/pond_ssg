@@ -16,8 +16,7 @@ fn parse_markdown(input: &str) -> String {
 }
 
 // TODO read filename 
-fn read_markdown() -> Result<String, Error> {
-    let path = "sample_input.md";
+fn read_markdown<P: AsRef<Path>>(path: P) -> Result<String, Error> {
     let input = File::open(path)?;
     let mut buffered = BufReader::new(input);
     let mut markdown_input = String::new();
@@ -68,7 +67,7 @@ fn main() {
     }
 }
 
-fn watch<P: AsRef<Path>>(path: P) -> notify::Result<()> {
+fn watch <P: AsRef<Path>> (path: P) -> notify::Result<()> {
     let (tx, rx) = std::sync::mpsc::channel();
     let mut watcher = RecommendedWatcher::new(tx, Config::default())?;
     watcher.watch(path.as_ref(), RecursiveMode::Recursive)?;
@@ -77,7 +76,7 @@ fn watch<P: AsRef<Path>>(path: P) -> notify::Result<()> {
         match res {
             Ok(event) => {
                 println!("Change: {event:?}");
-                markdown_to_wrapped_html()?;
+                markdown_to_wrapped_html(&path)?;
             }
             Err(error) => eprintln!("Error: {error:?}"),
         }
@@ -86,8 +85,8 @@ fn watch<P: AsRef<Path>>(path: P) -> notify::Result<()> {
     Ok(())
 }
 
-fn markdown_to_wrapped_html() -> std::io::Result<()>{
-    let html_from_md = parse_markdown(&read_markdown()?);
+fn markdown_to_wrapped_html<P: AsRef<Path>>(path: P) -> std::io::Result<()>{
+    let html_from_md = parse_markdown(&read_markdown(path)?);
     let mut file = File::create("sample_output.html")?;
     let wrapped_html = wrap_html(&html_from_md);
     println!("new change!");
