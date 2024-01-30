@@ -4,19 +4,22 @@
     <head>
     <meta charset="UTF-8">
 
-    <link rel="stylesheet" href="css/pico.yellow.min.css">
-    <title></title>
+    <link rel="stylesheet" href="pico.min.css">
+    <title>sample_input</title>
 </head>
 <body class="container">
+<h1> sample_input </h1>
+<hr>
 <p>If you don't use GDB but program in C/C++, you are missing out on a powerful debugging tool. Here's a quick 5-minute tutorial to get you started.</p>
-<p>kashache don varsha ZZZDujU<code>this is some cod emd </code></p>
-<p>/## Step 1: Compile with Debug Symbols 
-Compile your program using the <code>-ggdb</code> flag to include debug symbols for GDB.</p>
+<h2>Step 1: Compile with Debug Symbols</h2>
+<p>Compile your program using the <code>-ggdb</code> flag to include debug symbols for GDB.</p>
 <pre><code class="language-bash"># For C++
 g++ main.cpp -o main -ggdb
 
 # For C
 gcc main.c -o main -ggdb
+
+# For Rust
 </code></pre>
 <h2>Step 2: Run GDB</h2>
 <p>Now, run GDB from the shell, pointing it to your compiled executable.</p>

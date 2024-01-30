@@ -1,7 +1,7 @@
 pub mod parse;
 
 fn main() {
-    //let _ = parse::markdown_to_styled_html("sample_input.md");
+    let _ = parse::markdown_to_styled_html("sample_input");
     /*
     let path = std::env::args()
         .nth(1)

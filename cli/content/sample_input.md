@@ -1,5 +1,6 @@
 If you don't use GDB but program in C/C++, you are missing out on a powerful debugging tool. Here's a quick 5-minute tutorial to get you started.
 
+
 ## Step 1: Compile with Debug Symbols
 
 Compile your program using the `-ggdb` flag to include debug symbols for GDB.
@@ -10,6 +11,8 @@ g++ main.cpp -o main -ggdb
 
 # For C
 gcc main.c -o main -ggdb
+
+# For Rust
 ```
 
 ## Step 2: Run GDB

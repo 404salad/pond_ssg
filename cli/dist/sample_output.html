@@ -1,9 +1,13 @@
-<!doctype html>
-<head>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
-</head>
-<body>
 
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="css/pico.yellow.min.css">
+    <title></title>
+</head>
+<body class="container">
 <p>If you don't use GDB but program in C/C++, you are missing out on a powerful debugging tool. Here's a quick 5-minute tutorial to get you started.</p>
 <h2>Step 1: Compile with Debug Symbols</h2>
 <p>Compile your program using the <code>-ggdb</code> flag to include debug symbols for GDB.</p>
@@ -12,6 +16,8 @@ g++ main.cpp -o main -ggdb
 
 # For C
 gcc main.c -o main -ggdb
+
+# For Rust
 </code></pre>
 <h2>Step 2: Run GDB</h2>
 <p>Now, run GDB from the shell, pointing it to your compiled executable.</p>

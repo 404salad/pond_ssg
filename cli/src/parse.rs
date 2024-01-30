@@ -1,6 +1,5 @@
 use std::fs::File;
 use std::path::Path;
-use std::thread;
 use std::io::prelude::*;
 use std::io::{Write, BufReader, Error};
 use pulldown_cmark::{Parser, Options, html};
@@ -24,19 +23,22 @@ fn read_markdown<P: AsRef<Path>>(path: P) -> Result<String, Error> {
 
 // wrapper for input so that standard html and styles can be injected after converting to html
 // TODO parameterize and read from a config file
-fn wrap_html(markdown_output: &str) -> String {
+fn wrap_html(markdown_output: &str, article: &str) -> String {
     let mut wrapped_html = String::from(markdown_output);
-    wrapped_html="
+    wrapped_html=format!("
 <!DOCTYPE html>
     <html lang=\"en\">
     <head>
     <meta charset=\"UTF-8\">
 
-    <link rel=\"stylesheet\" href=\"css/pico.yellow.min.css\">
-    <title></title>
+    <link rel=\"stylesheet\" href=\"pico.min.css\">
+    <title>{article}</title>
 </head>
 <body class=\"container\">
-".to_string() + &wrapped_html +
+<h1> {article} </h1>
+<hr>
+"
+).to_string() + &wrapped_html +
 "
 </body>
 </html>
@@ -45,11 +47,16 @@ fn wrap_html(markdown_output: &str) -> String {
 }
 
 
-
-pub fn markdown_to_styled_html<P: AsRef<Path>>(path: P) -> std::io::Result<()>{
-    let html_from_md = parse_markdown(&read_markdown(path)?);
-    let mut file = File::create("sample_output.html")?;
-    let wrapped_html = wrap_html(&html_from_md);
+pub fn markdown_to_styled_html(article: &str) -> std::io::Result<()>{
+    let base_path = String::from("content/");
+    let mut input_path = base_path.clone() + &article.to_owned();
+    let mut output_path = base_path.clone() + &article.to_owned();
+    input_path.push_str(".md");
+    output_path.push_str(".html");
+    println!("{input_path} and {output_path}");
+    let html_from_md = parse_markdown(&read_markdown(input_path)?);
+    let mut file = File::create(output_path)?;
+    let wrapped_html = wrap_html(&html_from_md, article);
     write!(file,"{wrapped_html}")?;
     Ok(())
 }

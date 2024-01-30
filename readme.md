@@ -2,7 +2,6 @@ pond — a minimal and fast static site generator
 ===
 
 ### note
-when using vim `:set backupcopy=yes` for the watcher to work (realtime changes)
 
 ## goals
 - online editor
