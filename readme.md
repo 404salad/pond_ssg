@@ -1,7 +1,11 @@
 pond — a minimal and fast static site generator
 ===
 
-### note
+### current things
+- creating a homepage
+  - iterating through the content/ directory and displaying those
+  - creating an index.html
+- setting up gh actions 
 
 ## goals
 - online editor
