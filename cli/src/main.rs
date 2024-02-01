@@ -1,11 +1,11 @@
-pub mod parse;
+pub mod parse_one_article;
 use std::thread;
 use std::time::Duration;
 
 use console::Term;
 
-fn main(){
-    let term = Term::stdout();
+fn main() {
+     let term = Term::stdout();
     term.clear_screen();
     term.write_line("
     ██████   ██████  ███    ██ ██████      ███████ ███████  ██████  
@@ -15,8 +15,16 @@ fn main(){
     ██       ██████  ██   ████ ██████      ███████ ███████  ██████  
                     ");
     thread::sleep(Duration::from_millis(200));
-    term.write_line("A simple cli tool to convert markdown to blog");
-    let _ = parse::markdown_to_styled_html("sample_input");
+    term.write_line("       A simple cli tool to convert markdown to blog");
+
+    match parse_one_article::markdown_to_styled_html("sample"){
+        Ok(_) => {
+            println!("succesful parse")
+        }
+        Err(e) => {
+            eprintln!("unsuccesful parse {}", e)
+        }
+    };
     /*
     let path = std::env::args()
         .nth(1)

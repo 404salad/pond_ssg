@@ -1,7 +1,5 @@
 If you don't use GDB but program in C/C++, you are missing out on a powerful debugging tool. Here's a quick 5-minute tutorial to get you started.
 
-# mai kisi ka sapne hun1 jo aaj ban chuka hun jhooth
-
 ## Step 1: Compile with Debug Symbols
 
 Compile your program using the `-ggdb` flag to include debug symbols for GDB.

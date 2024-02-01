@@ -31,7 +31,7 @@ fn wrap_html(markdown_output: &str, article: &str) -> String {
     <head>
     <meta charset=\"UTF-8\">
 
-    <link rel=\"stylesheet\" href=\"pico.min.css\">
+    <link rel=\"stylesheet\" href=\"../pico.min.css\">
     <title>{article}</title>
 </head>
 <body class=\"container\">
@@ -48,12 +48,11 @@ fn wrap_html(markdown_output: &str, article: &str) -> String {
 
 
 pub fn markdown_to_styled_html(article: &str) -> std::io::Result<()>{
-    let base_path = String::from("content/");
-    let mut input_path = base_path.clone() + &article.to_owned();
-    let mut output_path = base_path.clone() + &article.to_owned();
+    let mut input_path = String::from("content/") + &article.to_owned();
+    let mut output_path =String::from("dist/articles/")+ &article.to_owned();
     input_path.push_str(".md");
     output_path.push_str(".html");
-    println!("{input_path} and {output_path}");
+    println!("{input_path} => {output_path}");
     let html_from_md = parse_markdown(&read_markdown(input_path)?);
     let mut file = File::create(output_path)?;
     let wrapped_html = wrap_html(&html_from_md, article);
