@@ -1,7 +1,10 @@
 pond — a minimal and fast static site generator
 ===
 
+### usage 
 just add all your blogs in .md format to the content directory then the dist folder will have your website
+
+then run `cargo run` making sure you have rust installed 
 
 ### current things
 - setting up gh actions 
