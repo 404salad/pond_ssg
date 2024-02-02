@@ -21,6 +21,7 @@ fn main() {
 
     let article_names = consolidate_into_homepage::read_directory_content();
 
+    // rebuilding all the articles in content directory
     for article_name in article_names {
         match parse_one_article::markdown_to_styled_html(&article_name){
             Ok(_) => {
@@ -31,6 +32,14 @@ fn main() {
             }
         };
     }
+    match consolidate_into_homepage::create_homepage() {
+            Ok(_) => {
+                println!("succesfully created homepage")
+            }
+            Err(e) => {
+                eprintln!("unsuccesful in creating homepage {}", e)
+            }
+    };
 
 }
 
