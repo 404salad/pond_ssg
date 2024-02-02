@@ -1,6 +1,8 @@
 pond — a minimal and fast static site generator
 ===
 
+just add all your blogs in .md format to the content directory then the dist folder will have your website
+
 ### current things
 - setting up gh actions 
 - creating a toml config
