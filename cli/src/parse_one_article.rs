@@ -37,8 +37,7 @@ fn wrap_html(markdown_output: &str, article: &str) -> String {
 </head>
 <body class=\"container\">
 <br>
-<br>
-<h1> Title: {article} </h1>
+<h1> | {article} | </h1>
 <hr>
 "
 ).to_string() + &wrapped_html +

@@ -37,6 +37,8 @@ pub fn read_directory_content() -> Vec<String>{
 pub fn create_homepage() -> std::io::Result<()>{
     let article_names = read_directory_content();
     let output_path =String::from("dist/index.html");
+    // TODO write username instead of homepage
+    // read from a TOML config toml crate
     let mut document=format!("
 <!DOCTYPE html>
     <html lang=\"en\">
