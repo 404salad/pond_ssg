@@ -19,21 +19,18 @@ fn main() {
     thread::sleep(Duration::from_millis(200));
     term.write_line("       A simple cli tool to convert markdown to blog");
 
-    consolidate_into_homepage::list_paths();
-    match parse_one_article::markdown_to_styled_html("sample"){
-        Ok(_) => {
-            println!("succesful parse")
-        }
-        Err(e) => {
-            eprintln!("unsuccesful parse {}", e)
-        }
-    };
-    /*
-    let path = std::env::args()
-        .nth(1)
-        .expect("Argument 1 needs to be a path");
-    */
+    let article_names = consolidate_into_homepage::read_directory_content();
 
+    for article_name in article_names {
+        match parse_one_article::markdown_to_styled_html(&article_name){
+            Ok(_) => {
+                println!("succesful parse")
+            }
+            Err(e) => {
+                eprintln!("unsuccesful parse {}", e)
+            }
+        };
+    }
 
 }
 
