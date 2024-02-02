@@ -2,23 +2,19 @@ pond — a minimal and fast static site generator
 ===
 
 ### current things
-- creating a homepage
-  - iterating through the content/ directory and displaying those
-  - creating an index.html
 - setting up gh actions 
+- creating a toml config
 
 ## goals
 - online editor
 - adding color themes
 - To make it standard markdown compatible
 - content first approach
-- alignment styles
 - image support
 - use a lot of comments in code to make contributing easier
 - cli based scaffolding of standard websites
     - blogsite
     - theme
-    - alignment
 - dockerizing
 
 ## tags 
