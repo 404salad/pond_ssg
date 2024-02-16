@@ -12,7 +12,7 @@ This is a paragraph of text.
 You can use various heading tags (`#`, `##`, ..., `######`) to structure your content.
 
 **Link:**
-Visit [pond-ssg](www.github.com/404salad/pond-ssg) for more information.
+Visit [pond-ssg](https://www.github.com/404salad/pond-ssg) for more information.
 
 **List:**
 - Item 1

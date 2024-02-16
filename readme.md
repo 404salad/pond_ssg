@@ -7,8 +7,8 @@ just add all your blogs in .md format to the content directory then the dist fol
 then run `cargo run` making sure you have rust installed 
 
 ### current things
-[x] - creating a toml config
-[x] -  
+[ ] - adding an user focused interface to create markdown files 
+[ ] - creating a search feature for main page 
 [x] - setting up gh actions 
 [x] - creating a toml config
 
