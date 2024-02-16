@@ -1,5 +1,6 @@
 pub mod parse_one_article;
 pub mod consolidate_into_homepage;
+pub mod config;
 
 use std::thread;
 use std::time::Duration;
@@ -7,7 +8,7 @@ use std::time::Duration;
 use console::Term;
 
 fn main() {
-     let term = Term::stdout();
+    let term = Term::stdout();
     term.clear_screen();
     term.write_line("
     ██████   ██████  ███    ██ ██████      ███████ ███████  ██████  
@@ -19,6 +20,7 @@ fn main() {
     thread::sleep(Duration::from_millis(200));
     term.write_line("       A simple cli tool to convert markdown to blog");
 
+    /*
     let article_names = consolidate_into_homepage::read_directory_content();
 
     // rebuilding all the articles in content directory
@@ -40,6 +42,8 @@ fn main() {
                 eprintln!("unsuccesful in creating homepage {}", e)
             }
     };
+    */
+    config::initial_config();
 
 }
 
