@@ -20,7 +20,12 @@ fn main() {
     thread::sleep(Duration::from_millis(200));
     term.write_line("       A simple cli tool to convert markdown to blog");
 
-    /*
+    // TODO: only run this function if config toml doesnt exist 
+    //config::initial_config();
+
+    let user_config = config::read_config();
+    println!("{user_config}");
+    
     let article_names = consolidate_into_homepage::read_directory_content();
 
     // rebuilding all the articles in content directory
@@ -34,7 +39,7 @@ fn main() {
             }
         };
     }
-    match consolidate_into_homepage::create_homepage() {
+    match consolidate_into_homepage::create_homepage(&user_config) {
             Ok(_) => {
                 println!("succesfully created homepage")
             }
@@ -42,8 +47,7 @@ fn main() {
                 eprintln!("unsuccesful in creating homepage {}", e)
             }
     };
-    */
-    config::initial_config();
+
 
 }
 

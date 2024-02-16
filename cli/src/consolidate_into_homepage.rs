@@ -1,6 +1,7 @@
 use std::fs;
 use std::fs::File;
 use std::io::{Write};
+use super::config;
 
 pub fn read_directory_content() -> Vec<String>{
     let mut article_names:Vec<String> = vec![];
@@ -34,7 +35,7 @@ pub fn read_directory_content() -> Vec<String>{
     article_names
 }
 
-pub fn create_homepage() -> std::io::Result<()>{
+pub fn create_homepage(user_config: &config::UserConfig) -> std::io::Result<()>{
     let article_names = read_directory_content();
     let output_path =String::from("dist/index.html");
     // TODO write username instead of homepage
@@ -49,11 +50,12 @@ pub fn create_homepage() -> std::io::Result<()>{
     <title>homepage</title>
 </head>
 <br>
-<h1>HOMEPAGE</h1>
+<h1>{}</h1>
+<h6>{}</h6>
 <body class=\"container\">
 <br>
 <br>
-");
+", user_config.blog_name, user_config.author_name);
     for article_name in article_names {
         document.push_str(format!("
 <article> 

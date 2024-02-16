@@ -3,10 +3,11 @@ use serde::Deserialize;
 use std::io::{self,Write};
 use std::fs::read_to_string;
 
+
 #[derive(Deserialize)]
-struct UserConfig {
-    author_name: String,
-    blog_name: String,
+pub struct UserConfig {
+    pub author_name: String,
+    pub blog_name: String,
 }
 
 impl fmt::Display for UserConfig {
@@ -16,6 +17,7 @@ impl fmt::Display for UserConfig {
     }
 }
 
+/*
 pub fn initial_config () {
     print!("enter your name > " );
     io::stdout().flush().expect("flush failed");
@@ -35,11 +37,10 @@ pub fn initial_config () {
         author_name,
         blog_name,
     };
-    println!("{user}");
-    read_config();
 }
+*/
 
-pub fn read_config(){
+pub fn read_config() -> UserConfig{
     let config_file_data = match read_to_string("config.toml"){
         Ok(d) => {d},
         Err(_) => {String::new()}
@@ -48,13 +49,7 @@ pub fn read_config(){
     //TODO: error handling
     let config: UserConfig = toml::from_str(&config_file_data).unwrap();
         
-    println!("{config}")
-    /*
-    let author_name = String::from("john bhai");
-    let user = UserConfig{
-        author_name,
-    };
-    println!("{user}");
-    */
+    config
+
 }
 
