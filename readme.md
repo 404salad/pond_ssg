@@ -7,8 +7,10 @@ just add all your blogs in .md format to the content directory then the dist fol
 then run `cargo run` making sure you have rust installed 
 
 ### current things
-- setting up gh actions 
-- creating a toml config
+[x] - creating a toml config
+[x] -  
+[x] - setting up gh actions 
+[x] - creating a toml config
 
 ## goals
 - online editor
