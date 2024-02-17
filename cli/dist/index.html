@@ -1,27 +1,43 @@
-
 <!DOCTYPE html>
-    <html lang="en">
-    <head>
-    <meta charset="UTF-8">
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Homepage</title>
+            <link rel="stylesheet" href="pico.min.css">
+            <script>
+                function filterArticles() { 
+                    var input, filter, articleList, articles, article, title, i, titleText;
+                    input = document.getElementById('search');
+                    filter = input.value.toUpperCase();
+                    articleList = document.getElementById('articleList');
+                    articles = articleList.getElementsByTagName('article');
 
-    <link rel="stylesheet" href="pico.min.css">
-    <title>homepage</title>
-</head>
-<br>
-<h1>404salads croutons</h1>
-<h6>Sahil Upasane</h6>
-<body class="container">
-<br>
-<br>
-
-<article> 
-    <a href="articles/sample.html"> sample </a>
-</article>
-        
-<article> 
-    <a href="articles/sample_input.html"> sample_input </a>
-</article>
-        
-</body>
-</html>
-    
+                    // Loop through all articles, and hide those whose titles don't match the search query
+                    for (i = 0; i < articles.length; i++) {
+                        article = articles[i];
+                        title = article.getElementsByTagName('a')[0];
+                        titleText = title.textContent || title.innerText;
+                        if (titleText.toUpperCase().indexOf(filter) > -1) {
+                            article.style.display = '';
+                        } else {
+                            article.style.display = 'none';
+                        }
+                    }
+                }
+            </script>
+        </head>
+        <body class="container">
+            <br>
+            <h1>404salads croutons</h1>
+            <h6>Sahil Upasane</h6>
+            <input type="search" id="search" name="search" placeholder="Type to search..." onkeyup="filterArticles()">
+            <br>
+            <br>
+            <section id="articleList"><article>
+                <a href="articles/sample.html"> sample </a>
+            </article><article>
+                <a href="articles/sample_input.html"> sample_input </a>
+            </article>
+            </section>
+        </body>
+        </html>

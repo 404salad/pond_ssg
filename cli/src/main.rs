@@ -27,7 +27,7 @@ fn main() {
     println!("{user_config}");
     
     let article_names = consolidate_into_homepage::read_directory_content();
-
+    println!("{:?}", article_names);
     // rebuilding all the articles in content directory
     for article_name in article_names {
         match parse_one_article::markdown_to_styled_html(&article_name){
