@@ -30,7 +30,7 @@ fn main() {
     println!("{:?}", article_names);
     // rebuilding all the articles in content directory
     for article_name in article_names {
-        match parse_one_article::markdown_to_styled_html(&article_name){
+        match parse_one_article::markdown_to_styled_html(&article_name, &user_config){
             Ok(_) => {
                 println!("succesful parse")
             }

@@ -45,8 +45,8 @@ pub fn create_homepage(user_config: &config::UserConfig) -> std::io::Result<()> 
         <html lang=\"en\">
         <head>
             <meta charset=\"UTF-8\">
-            <title>Homepage</title>
-            <link rel=\"stylesheet\" href=\"pico.min.css\">
+            <title>{}</title>
+            <link rel=\"stylesheet\" href=\"css\\pico.{}.min.css\">
             <script>
                 function filterArticles() {{ 
                     var input, filter, articleList, articles, article, title, i, titleText;
@@ -77,7 +77,7 @@ pub fn create_homepage(user_config: &config::UserConfig) -> std::io::Result<()> 
             <br>
             <br>
             <section id=\"articleList\">",
-        user_config.blog_name, user_config.author_name
+        user_config.blog_name, user_config.accent_color, user_config.blog_name, user_config.author_name
     ));
 
     for article_name in article_names {

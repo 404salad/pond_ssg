@@ -3,6 +3,7 @@ use std::path::Path;
 use std::io::prelude::*;
 use std::io::{Write, BufReader, Error};
 use pulldown_cmark::{Parser, Options, html};
+use super::config;
 
 // parse markdown to html
 fn parse_markdown(input: &str) -> String {
@@ -24,7 +25,7 @@ fn read_markdown<P: AsRef<Path>>(path: P) -> Result<String, Error> {
 // wrapper for input so that standard html and styles can be injected after converting to html
 // TODO parameterize and read from a config file
 // TODO also make this user editable so read it from a file 
-fn wrap_html(markdown_output: &str, article: &str) -> String {
+fn wrap_html(markdown_output: &str, article: &str, user_config: &config::UserConfig) -> String {
     let mut wrapped_html = String::from(markdown_output);
     wrapped_html=format!("
 <!DOCTYPE html>
@@ -32,14 +33,14 @@ fn wrap_html(markdown_output: &str, article: &str) -> String {
     <head>
     <meta charset=\"UTF-8\">
 
-    <link rel=\"stylesheet\" href=\"../pico.min.css\">
+    <link rel=\"stylesheet\" href=\"../css/pico.{}.min.css\">
     <title>{article}</title>
 </head>
 <body class=\"container\">
 <br>
 <h1> | {article} | </h1>
 <hr>
-"
+", user_config.accent_color
 ).to_string() + &wrapped_html +
 "
 </body>
@@ -49,7 +50,7 @@ fn wrap_html(markdown_output: &str, article: &str) -> String {
 }
 
 
-pub fn markdown_to_styled_html(article: &str) -> std::io::Result<()>{
+pub fn markdown_to_styled_html(article: &str, user_config: &config::UserConfig) -> std::io::Result<()>{
     let mut input_path = String::from("content/") + &article.to_owned();
     let mut output_path =String::from("dist/articles/")+ &article.to_owned();
     input_path.push_str(".md");
@@ -57,7 +58,7 @@ pub fn markdown_to_styled_html(article: &str) -> std::io::Result<()>{
     println!("{input_path} => {output_path}");
     let html_from_md = parse_markdown(&read_markdown(input_path)?);
     let mut file = File::create(output_path)?;
-    let wrapped_html = wrap_html(&html_from_md, article);
+    let wrapped_html = wrap_html(&html_from_md, article, user_config);
     write!(file,"{wrapped_html}")?;
     Ok(())
 }
