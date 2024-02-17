@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="../css/pico.lime.min.css">
+    <title>Debugging C++ Programs with GDB</title>
+</head>
+<body class="container">
+<a href='../index.html'>home</a>
+<br>
+<h1> | Debugging C++ Programs with GDB | </h1>
+<hr>
+<p>If you don’t use GDB but program in C/C++, you are missing out on a powerful debugging tool. Here’s a quick 5-minute tutorial to get you started.</p>
+<h2>Step 1: Compile with Debug Symbols</h2>
+<p>Compile your program using the <code>-ggdb</code> flag to include debug symbols for GDB.</p>
+<pre><code class="language-bash"># For C++
+g++ main.cpp -o main -ggdb
+
+# For C
+gcc main.c -o main -ggdb
+</code></pre>
+<h2>Step 2: Run GDB</h2>
+<p>Now, run GDB from the shell, pointing it to your compiled executable.</p>
+<pre><code class="language-bash">gdb ./main
+</code></pre>
+<p>(Note: If you aren’t using Linux, at least consider using WSL (Windows Subsystem for Linux) for a better debugging experience.)</p>
+<p>You will see the <code>(gdb)</code> prompt.</p>
+<h2>Step 3: Basic GDB Commands</h2>
+<ul>
+<li>Type <code>run</code> to execute your program.</li>
+<li>Use <code>break</code> followed by a line number or function name to set breakpoints.</li>
+<li>Type <code>n</code> to step through the code line by line.</li>
+</ul>
+<h2>Step 4: Visualize Code with <code>layout split</code></h2>
+<p>One helpful feature is the split layout, which displays both the source code and GDB commands simultaneously.</p>
+<pre><code class="language-bash">layout split
+</code></pre>
+<h2>Step 5: Inspecting Variables</h2>
+<p>Use the <code>print</code> and <code>display</code> commands in GDB to inspect variables and expressions during debugging.</p>
+<p>For example:</p>
+<pre><code class="language-bash">print variable_name
+display expression
+</code></pre>
+<p>These commands help you check if anything is unexpected in your program.</p>
+<p>Now go practice!!!</p>
+
+</body>
+</html>
