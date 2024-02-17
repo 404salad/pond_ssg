@@ -41,16 +41,15 @@ pub fn initial_config () {
 }
 */
 
-pub fn read_config() -> UserConfig{
+pub fn read_config() -> Result<UserConfig, toml::de::Error>{
     let config_file_data = match read_to_string("config.toml"){
         Ok(d) => {d},
         Err(_) => {String::new()}
     };
 
-    //TODO: error handling
-    let config: UserConfig = toml::from_str(&config_file_data).unwrap();
+    let config: UserConfig = toml::from_str(&config_file_data)?;
         
-    config
+    Ok(config)
 
 }
 

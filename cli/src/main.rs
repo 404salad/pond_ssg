@@ -23,8 +23,8 @@ fn main() {
     // TODO: only run this function if config toml doesnt exist 
     //config::initial_config();
 
-    let user_config = config::read_config();
-    println!("{user_config}");
+    let user_config = config::read_config().unwrap();
+    println!("{}",user_config);
     
     let article_names = consolidate_into_homepage::read_directory_content();
     println!("{:?}", article_names);

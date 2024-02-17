@@ -9,7 +9,7 @@ then run `cargo run` making sure you have rust installed
 ### current things
 [ ] - adding an user focused interface to create markdown files 
 [ ] - adding more metadata on the article links on homepage
-[ ] - modular styles using colored variants of pico or extracting basic colors to make a basic template 
+[x] - modular styles using colored variants of pico or extracting basic colors to make a basic template 
 [x] - creating a search feature for main page 
 [x] - setting up gh actions 
 [x] - creating a toml config

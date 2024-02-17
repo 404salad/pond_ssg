@@ -48,7 +48,7 @@ fn wrap_html(markdown_output: &str, article: &str, user_config: &config::UserCon
     wrapped_html
 }
 
-
+/// convert a single .md file to html
 pub fn markdown_to_styled_html(article: &str, user_config: &config::UserConfig) -> std::io::Result<()>{
     let mut input_path = String::from("content/") + &article.to_owned();
     let mut output_path =String::from("dist/articles/")+ &article.to_owned();
