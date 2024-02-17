@@ -23,8 +23,6 @@ fn read_markdown<P: AsRef<Path>>(path: P) -> Result<String, Error> {
 }
 
 // wrapper for input so that standard html and styles can be injected after converting to html
-// TODO parameterize and read from a config file
-// TODO also make this user editable so read it from a file 
 fn wrap_html(markdown_output: &str, article: &str, user_config: &config::UserConfig) -> String {
     let mut wrapped_html = String::from(markdown_output);
     wrapped_html=format!("
@@ -37,6 +35,7 @@ fn wrap_html(markdown_output: &str, article: &str, user_config: &config::UserCon
     <title>{article}</title>
 </head>
 <body class=\"container\">
+<a href='../index.html'>home</a>
 <br>
 <h1> | {article} | </h1>
 <hr>
