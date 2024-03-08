@@ -8,3 +8,5 @@ There is a delicate balance between the amount of logs and their usefulness, and
 
 In summary, log what you need to but not needlessly as it increases the attack surface. 
 There is a cost to logs don't pay with security. 
+
+![A forest being logged](images/forest.jpg)
