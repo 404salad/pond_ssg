@@ -1,19 +1,17 @@
 pub mod parse_one_article;
 pub mod consolidate_into_homepage;
 pub mod config;
+pub mod utils;
 
 use std::thread;
 use std::time::Duration;
 use std::env;
+use std::fs;
 
 use console::Term;
 
 fn main() {
 
-    /*
-    let args: Vec<String> = env::args().collect();
-    let opt = &args[1]; // prune 
-    */
 
     let term = Term::stdout();
     term.clear_screen();
@@ -33,9 +31,9 @@ fn main() {
     let user_config = config::read_config().unwrap();
     println!("{}",user_config);
     
-    // Remove previous content
-    let demo_dir = fs::read_dir("/path/to/dir");
-    delete_dir_contents(demo_dir);
+    // Remove previous content (clean)
+    let article_dir = fs::read_dir("dist/articles");
+    utils::delete_dir_contents(article_dir);
 
     let article_names = consolidate_into_homepage::read_directory_content();
     println!("{:?}", article_names);

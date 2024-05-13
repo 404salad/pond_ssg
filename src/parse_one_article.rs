@@ -36,8 +36,7 @@ fn wrap_html(markdown_output: &str, article: &str, user_config: &config::UserCon
 </head>
 <body class=\"container\">
 <a href='../index.html'>home</a>
-<br>
-<h1> | {article} | </h1>
+<h1>  {article}  </h1>
 <hr>
 ") + &wrapped_html +
 "
