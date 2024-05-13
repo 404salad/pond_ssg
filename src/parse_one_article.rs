@@ -31,7 +31,7 @@ fn wrap_html(markdown_output: &str, article: &str, user_config: &config::UserCon
     <head>
     <meta charset=\"UTF-8\">
 
-    <link rel=\"stylesheet\" href=\"../css/pico.{}.min.css\">
+    <link rel=\"stylesheet\" href=\"../style.css\">
     <title>{article}</title>
 </head>
 <body class=\"container\">
@@ -39,8 +39,7 @@ fn wrap_html(markdown_output: &str, article: &str, user_config: &config::UserCon
 <br>
 <h1> | {article} | </h1>
 <hr>
-", user_config.accent_color
-).to_string() + &wrapped_html +
+") + &wrapped_html +
 "
 </body>
 </html>

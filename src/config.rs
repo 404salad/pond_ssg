@@ -8,13 +8,12 @@ use std::fs::read_to_string;
 pub struct UserConfig {
     pub author_name: String,
     pub blog_name: String,
-    pub accent_color: String,
 }
 
 impl fmt::Display for UserConfig {
     fn fmt(&self, f:&mut fmt::Formatter) -> fmt::Result {
-        write!(f, "author name > {} \nblog name > {} \naccent_color > {}
-", self.author_name, self.blog_name, self.accent_color)
+        write!(f, "author name > {} \nblog name > {}
+", self.author_name, self.blog_name)
     }
 }
 

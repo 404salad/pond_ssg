@@ -41,12 +41,12 @@ pub fn create_homepage(user_config: &config::UserConfig) -> std::io::Result<()> 
 
     let mut document = String::new();
     document.push_str(&format!(
-        "<!DOCTYPE html>
+            "<!DOCTYPE html>
         <html lang=\"en\">
         <head>
             <meta charset=\"UTF-8\">
             <title>{}</title>
-            <link rel=\"stylesheet\" href=\"css\\pico.{}.min.css\">
+            <link rel=\"stylesheet\" href=\"style.css\">
             <script>
                 function filterArticles() {{ 
                     var input, filter, articleList, articles, article, title, i, titleText;
@@ -77,24 +77,24 @@ pub fn create_homepage(user_config: &config::UserConfig) -> std::io::Result<()> 
             <br>
             <br>
             <section id=\"articleList\">",
-        user_config.blog_name, user_config.accent_color, user_config.blog_name, user_config.author_name
-    ));
+            user_config.blog_name, user_config.blog_name, user_config.author_name
+                ));
 
-    for article_name in article_names {
-        document.push_str(&format!(
-            "<article>
+            for article_name in article_names {
+                document.push_str(&format!(
+                        "<article>
                 <a href=\"articles/{article_name}.html\"> {article_name} </a>
             </article>",
             article_name = article_name
-        ));
-    }
+            ));
+            }
 
-    document.push_str("
+            document.push_str("
             </section>
         </body>
         </html>");
 
-    let mut file = File::create(output_path)?;
-    write!(file, "{}", document)?;
-    Ok(())
+            let mut file = File::create(output_path)?;
+            write!(file, "{}", document)?;
+            Ok(())
 }
