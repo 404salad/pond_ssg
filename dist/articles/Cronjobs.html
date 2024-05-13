@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="../style.css">
+    <title>Cronjobs</title>
+</head>
+<body class="container">
+<a href='../index.html'>home</a>
+<h1>  Cronjobs  </h1>
+<hr>
+<blockquote>
+<p>running stuff in the background at a specified time is awesome</p>
+</blockquote>
+<p>I forget to backup my files and so i use cron to do it for me. </p>
+<p>Here is a basic rundown- </p>
+<ul>
+<li>crontab is the tab of all cronjobs</li>
+<li>run <code>crontab -e</code> it will ask for setup, use your favorite editor</li>
+</ul>
+<pre><code>export EDITOR=nvim
+</code></pre>
+<p>now run <code>crontab -e</code> again and you should be able to access the file</p>
+<pre><code># Add this line to your crontab file to run the backup every day at 2 AM
+0 2 * * * rsync -ah --info=progress2 /path/to/source /path/to/destination
+</code></pre>
+<p>those asterics are wildcards! It means run it everytime </p>
+<p>use this command format examples for cronjobs</p>
+<table><thead><tr><th>m</th><th>h</th><th>dom</th><th>mon</th><th>dow</th><th>command</th></tr></thead><tbody>
+<tr><td>minutes</td><td>hours</td><td>day</td><td>month</td><td>day of the week</td><td>command</td></tr>
+<tr><td>30</td><td>4</td><td>*</td><td>*</td><td>6</td><td>4:30 every Saturday</td></tr>
+<tr><td>15</td><td>14</td><td>*</td><td>*</td><td>*</td><td>2:15 every day</td></tr>
+<tr><td>0</td><td>0</td><td>*</td><td>*</td><td>0</td><td>12:00 AM every Sunday</td></tr>
+<tr><td>30</td><td>8</td><td>*</td><td>*</td><td>1-5</td><td>8:30 AM every weekday</td></tr>
+<tr><td>45</td><td>3</td><td>10</td><td>*</td><td>*</td><td>3:45 AM on the 10th</td></tr>
+<tr><td>59</td><td>23</td><td>31</td><td>12</td><td>*</td><td>11:59 PM on December 31st</td></tr>
+</tbody></table>
+
+</body>
+</html>
