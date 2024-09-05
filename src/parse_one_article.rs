@@ -1,9 +1,9 @@
-use std::fs::File;
-use std::path::Path;
-use std::io::prelude::*;
-use std::io::{Write, BufReader, Error};
-use pulldown_cmark::{Parser, Options, html};
 use super::config;
+use pulldown_cmark::{html, Options, Parser};
+use std::fs::File;
+use std::io::prelude::*;
+use std::io::{BufReader, Error, Write};
+use std::path::Path;
 
 // parse markdown to html
 fn parse_markdown(input: &str) -> String {
@@ -23,9 +23,10 @@ fn read_markdown<P: AsRef<Path>>(path: P) -> Result<String, Error> {
 }
 
 // wrapper for input so that standard html and styles can be injected after converting to html
-fn wrap_html(markdown_output: &str, article: &str, user_config: &config::UserConfig) -> String {
+fn wrap_html(markdown_output: &str, article: &str, _user_config: &config::UserConfig) -> String {
     let mut wrapped_html = String::from(markdown_output);
-    wrapped_html=format!("
+    wrapped_html = format!(
+        "
 <!DOCTYPE html>
     <html lang=\"en\">
     <head>
@@ -38,8 +39,9 @@ fn wrap_html(markdown_output: &str, article: &str, user_config: &config::UserCon
 <a href='../index.html'>home</a>
 <h1>  {article}  </h1>
 <hr>
-") + &wrapped_html +
 "
+    ) + &wrapped_html
+        + "
 </body>
 </html>
 ";
@@ -47,16 +49,18 @@ fn wrap_html(markdown_output: &str, article: &str, user_config: &config::UserCon
 }
 
 /// convert a single .md file to html
-pub fn markdown_to_styled_html(article: &str, user_config: &config::UserConfig) -> std::io::Result<()>{
+pub fn markdown_to_styled_html(
+    article: &str,
+    user_config: &config::UserConfig,
+) -> std::io::Result<()> {
+    println!("parsing - {article}");
     let mut input_path = String::from("content/") + &article.to_owned();
-    let mut output_path =String::from("dist/articles/")+ &article.to_owned();
+    let mut output_path = String::from("dist/articles/") + &article.to_owned();
     input_path.push_str(".md");
     output_path.push_str(".html");
-    println!("{input_path} => {output_path}");
     let html_from_md = parse_markdown(&read_markdown(input_path)?);
     let mut file = File::create(output_path)?;
     let wrapped_html = wrap_html(&html_from_md, article, user_config);
-    write!(file,"{wrapped_html}")?;
+    write!(file, "{wrapped_html}")?;
     Ok(())
 }
-

@@ -1,5 +1,6 @@
-# Hi! this is a minimal config file for pond
-
-author_name = 'Sahil Upasane'
-blog_name = '404salad'
-
+author_name = """
+sahil
+"""
+blog_name = """
+404salad
+"""

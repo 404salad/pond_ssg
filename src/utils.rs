@@ -12,8 +12,8 @@ pub fn delete_dir_contents(read_dir_res: Result<ReadDir, Error>) {
                 } else {
                     fs::remove_file(path).expect("Failed to remove a file");
                 }
-                println!("removed {:?}", entry);
             };
         }
     };
+    println!("successfully removed previous content");
 }

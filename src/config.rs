@@ -1,9 +1,10 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::fmt;
-use std::fs::read_to_string;
+use std::fs::{read_to_string, File};
 use std::io::{self, Write};
+use std::path::Path;
 
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize, Clone, Serialize)]
 pub struct UserConfig {
     pub author_name: String,
     pub blog_name: String,
@@ -20,28 +21,49 @@ impl fmt::Display for UserConfig {
     }
 }
 
-/*
-pub fn initial_config () {
-    print!("enter your name > " );
+pub fn initial_config() {
+    // only run config setup if the config file doesnt exists
+    if Path::new("config.toml").exists() {
+        return;
+    }
+
+    // taking user input
+    print!("enter your name > ");
     io::stdout().flush().expect("flush failed");
     let mut author_name = String::new();
     io::stdin()
         .read_line(&mut author_name)
         .expect("readline failed");
 
-    print!("enter blog name > " );
+    print!("enter blog name > ");
     io::stdout().flush().expect("flush failed");
     let mut blog_name = String::new();
     io::stdin()
         .read_line(&mut blog_name)
         .expect("readline failed");
 
-    let user = UserConfig{
+    let user = UserConfig {
         author_name,
         blog_name,
     };
+    let toml_config: String = match toml::to_string(&user) {
+        Ok(config_str) => config_str,
+        Err(why) => panic!("invalid config file due to {why}"),
+    };
+
+    // writing to config file
+    let config_path = Path::new("config.toml");
+
+    let mut config_file = match File::create(&config_path) {
+        Err(why) => panic!("cant create config file because {}", why),
+        Ok(file) => file,
+    };
+
+    match config_file.write_all(toml_config.as_bytes()) {
+        Err(why) => panic!("cant write to config file because {}", why),
+        Ok(_) => println!("succesfully created config file"),
+    }
 }
-*/
 
 pub fn read_config() -> Result<UserConfig, toml::de::Error> {
     let config_file_data = match read_to_string("config.toml") {
