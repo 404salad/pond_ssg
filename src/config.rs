@@ -52,6 +52,5 @@ pub fn read_config() -> Result<UserConfig, toml::de::Error> {
 
     let config: UserConfig = toml::from_str(&config_file_data)?;
 
-    println!("fwe");
     Ok(config)
 }
