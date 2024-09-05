@@ -38,9 +38,10 @@ fn main() {
     println!("{:?}", article_names);
 
     // rebuilding all the articles in content directory (parallely)
-    let user_config_for_threads = user_config.clone();
-    let parse_handler = thread::spawn(move || {
-        for article_name in article_names {
+
+    for article_name in article_names {
+        let user_config_for_threads = user_config.clone();
+        let parse_handler = thread::spawn(move || {
             match parse_one_article::markdown_to_styled_html(
                 &article_name,
                 &user_config_for_threads,
@@ -52,9 +53,9 @@ fn main() {
                     eprintln!("unsuccesful parse {}", e)
                 }
             };
-        }
-    });
-    let res = parse_handler.join();
+        });
+        let res = parse_handler.join();
+    }
 
     match consolidate_into_homepage::create_homepage(&user_config) {
         Ok(_) => {
