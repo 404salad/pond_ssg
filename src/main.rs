@@ -3,7 +3,6 @@ pub mod consolidate_into_homepage;
 pub mod parse_one_article;
 pub mod utils;
 
-use std::env;
 use std::fs;
 use std::thread;
 use std::time::Duration;
@@ -37,17 +36,26 @@ fn main() {
 
     let article_names = consolidate_into_homepage::read_directory_content();
     println!("{:?}", article_names);
-    // rebuilding all the articles in content directory
-    for article_name in article_names {
-        match parse_one_article::markdown_to_styled_html(&article_name, &user_config) {
-            Ok(_) => {
-                println!("succesful parse")
-            }
-            Err(e) => {
-                eprintln!("unsuccesful parse {}", e)
-            }
-        };
-    }
+
+    // rebuilding all the articles in content directory (parallely)
+    let user_config_for_threads = user_config.clone();
+    let parse_handler = thread::spawn(move || {
+        for article_name in article_names {
+            match parse_one_article::markdown_to_styled_html(
+                &article_name,
+                &user_config_for_threads,
+            ) {
+                Ok(_) => {
+                    println!("succesful parse")
+                }
+                Err(e) => {
+                    eprintln!("unsuccesful parse {}", e)
+                }
+            };
+        }
+    });
+    let res = parse_handler.join();
+
     match consolidate_into_homepage::create_homepage(&user_config) {
         Ok(_) => {
             println!("succesfully created homepage")

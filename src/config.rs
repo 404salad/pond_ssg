@@ -1,10 +1,9 @@
 use serde::Deserialize;
-use std::env;
 use std::fmt;
 use std::fs::read_to_string;
 use std::io::{self, Write};
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 pub struct UserConfig {
     pub author_name: String,
     pub blog_name: String,
