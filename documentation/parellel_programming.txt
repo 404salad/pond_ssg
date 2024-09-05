@@ -1,0 +1,11 @@
+according to my (very) quick and dirty testing using threads helps in performance!!!
+
+sequential times
+real	0m0.455s
+user	0m0.161s
+sys	0m0.075s
+
+parallel times on using rayon
+real	0m0.358s
+user	0m0.245s
+sys	0m0.073s
