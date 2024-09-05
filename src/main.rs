@@ -51,14 +51,12 @@ fn main() {
             }
         }
     });
-    /*
-        match consolidate_into_homepage::create_homepage(&user_config) {
-            Ok(_) => {
-                println!("succesfully created homepage")
-            }
-            Err(e) => {
-                eprintln!("unsuccesful in creating homepage {}", e)
-            }
-        };
-    */
+    match consolidate_into_homepage::create_homepage(&user_config) {
+        Ok(_) => {
+            println!("succesfully created homepage")
+        }
+        Err(e) => {
+            eprintln!("unsuccesful in creating homepage {}", e)
+        }
+    };
 }
