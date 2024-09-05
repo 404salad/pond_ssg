@@ -1,8 +1,8 @@
-use std::fmt;
 use serde::Deserialize;
-use std::io::{self,Write};
+use std::env;
+use std::fmt;
 use std::fs::read_to_string;
-
+use std::io::{self, Write};
 
 #[derive(Deserialize)]
 pub struct UserConfig {
@@ -11,9 +11,13 @@ pub struct UserConfig {
 }
 
 impl fmt::Display for UserConfig {
-    fn fmt(&self, f:&mut fmt::Formatter) -> fmt::Result {
-        write!(f, "author name > {} \nblog name > {}
-", self.author_name, self.blog_name)
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "author name > {} \nblog name > {}
+",
+            self.author_name, self.blog_name
+        )
     }
 }
 
@@ -40,15 +44,14 @@ pub fn initial_config () {
 }
 */
 
-pub fn read_config() -> Result<UserConfig, toml::de::Error>{
-    let config_file_data = match read_to_string("config.toml"){
-        Ok(d) => {d},
-        Err(_) => {String::new()}
+pub fn read_config() -> Result<UserConfig, toml::de::Error> {
+    let config_file_data = match read_to_string("config.toml") {
+        Ok(d) => d,
+        Err(_) => String::new(),
     };
 
     let config: UserConfig = toml::from_str(&config_file_data)?;
-        
+
+    println!("fwe");
     Ok(config)
-
 }
-
