@@ -3,6 +3,7 @@ pub mod consolidate_into_homepage;
 pub mod parse_one_article;
 pub mod utils;
 
+use rayon::prelude::*;
 use std::fs;
 use std::thread;
 use std::time::Duration;
@@ -39,23 +40,17 @@ fn main() {
 
     // rebuilding all the articles in content directory (parallely)
 
-    for article_name in article_names {
+    article_names.par_iter().for_each(|article_name| {
         let user_config_for_threads = user_config.clone();
-        let parse_handler = thread::spawn(move || {
-            match parse_one_article::markdown_to_styled_html(
-                &article_name,
-                &user_config_for_threads,
-            ) {
-                Ok(_) => {
-                    println!("succesful parse")
-                }
-                Err(e) => {
-                    eprintln!("unsuccesful parse {}", e)
-                }
-            };
-        });
-        let res = parse_handler.join();
-    }
+        match parse_one_article::markdown_to_styled_html(&article_name, &user_config_for_threads) {
+            Ok(_) => {
+                println!("succesful parse")
+            }
+            Err(e) => {
+                eprintln!("unsuccesful parse {}", e)
+            }
+        }
+    });
 
     match consolidate_into_homepage::create_homepage(&user_config) {
         Ok(_) => {
