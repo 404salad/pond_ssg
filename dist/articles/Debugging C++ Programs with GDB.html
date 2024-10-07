@@ -31,10 +31,14 @@ gcc main.c -o main -ggdb
 <li>Type <code>run</code> to execute your program.</li>
 <li>Use <code>break</code> followed by a line number or function name to set breakpoints.</li>
 <li>Type <code>n</code> to step through the code line by line.</li>
+<li>Type <code>s</code> to step into a function.</li>
 </ul>
 <h2>Step 4: Visualize Code with <code>layout split</code></h2>
 <p>One helpful feature is the split layout, which displays both the source code and GDB commands simultaneously.</p>
 <pre><code class="language-bash">layout split
+</code></pre>
+<p>or to skip the assembly view</p>
+<pre><code class="language-bash">layout src
 </code></pre>
 <h2>Step 5: Inspecting Variables</h2>
 <p>Use the <code>print</code> and <code>display</code> commands in GDB to inspect variables and expressions during debugging.</p>

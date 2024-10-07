@@ -30,6 +30,7 @@ You will see the `(gdb)` prompt.
 - Type `run` to execute your program.
 - Use `break` followed by a line number or function name to set breakpoints.
 - Type `n` to step through the code line by line.
+- Type `s` to step into a function.
 
 ## Step 4: Visualize Code with `layout split`
 
@@ -37,6 +38,12 @@ One helpful feature is the split layout, which displays both the source code and
 
 ```bash
 layout split
+```
+
+or to skip the assembly view
+
+```bash
+layout src
 ```
 
 ## Step 5: Inspecting Variables
