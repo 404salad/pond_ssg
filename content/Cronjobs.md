@@ -8,7 +8,6 @@ Here is a basic rundown-
 ```
 export EDITOR=nvim
 ```
-
 now run `crontab -e` again and you should be able to access the file
 ```
 # Add this line to your crontab file to run the backup every day at 2 AM
@@ -28,3 +27,4 @@ use this command format examples for cronjobs
 |59 | 23 | 31  | 12  | *   | 11:59 PM on December 31st         |
 
 
+# thank you for not judging judy
