@@ -14,8 +14,8 @@
 <blockquote>
 <p>running stuff in the background at a specified time is awesome</p>
 </blockquote>
-<p>I forget to backup my files and so i use cron to do it for me. </p>
-<p>Here is a basic rundown- </p>
+<p>I forget to backup my files and so i use cron to do it for me.<br />
+Here is a basic rundown- </p>
 <ul>
 <li>crontab is the tab of all cronjobs</li>
 <li>run <code>crontab -e</code> it will ask for setup, use your favorite editor</li>
@@ -26,8 +26,8 @@
 <pre><code># Add this line to your crontab file to run the backup every day at 2 AM
 0 2 * * * rsync -ah --info=progress2 /path/to/source /path/to/destination
 </code></pre>
-<p>those asterics are wildcards! It means run it everytime </p>
-<p>use this command format examples for cronjobs</p>
+<p>those asterics are wildcards! It means run it everytime<br />
+use this command format examples for cronjobs</p>
 <table><thead><tr><th>m</th><th>h</th><th>dom</th><th>mon</th><th>dow</th><th>command</th></tr></thead><tbody>
 <tr><td>minutes</td><td>hours</td><td>day</td><td>month</td><td>day of the week</td><td>command</td></tr>
 <tr><td>30</td><td>4</td><td>*</td><td>*</td><td>6</td><td>4:30 every Saturday</td></tr>
