@@ -31,7 +31,6 @@ fn wrap_html(markdown_output: &str, article: &str, _user_config: &config::UserCo
     <html lang=\"en\">
     <head>
     <meta charset=\"UTF-8\">
-
     <link rel=\"stylesheet\" href=\"../style.css\">
     <title>{article}</title>
 </head>

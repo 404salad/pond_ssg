@@ -25,10 +25,10 @@ fn main() {
     );
     let _ = term.write_line("       A simple cli tool to convert markdown to blog");
 
-    if utils::running_from_project_root() {
-        println!("running from base directory 🗸");
+    if utils::has_content_dir() {
+        println!("content/ found");
     } else {
-        println!("kindly run pond from the base directory");
+        println!("kindly make a content/ directory");
         return;
     }
 

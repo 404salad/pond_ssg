@@ -114,9 +114,9 @@ pub fn no_folder_level_changes(latest_change_time: &mut SystemTime) -> bool {
     }
 }
 
-pub fn running_from_project_root() -> bool {
+pub fn has_content_dir() -> bool {
     if let Ok(current_directory) = env::current_dir() {
-        current_directory.join("Cargo.toml").exists()
+        current_directory.join("content").exists()
     } else {
         false
     }
