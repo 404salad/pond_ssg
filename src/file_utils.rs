@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 use std::env;
 use std::fs;
-use std::fs::metadata;
 use std::fs::ReadDir;
 use std::io::Error;
 use std::path::PathBuf;
@@ -51,7 +50,19 @@ pub fn read_directory_content() -> Vec<String> {
             eprintln!("Error reading directory: {}", err);
         }
     };
+    article_names.sort_by_key(|k| time_of_creation(format!("content/{k}.md")));
+    article_names.reverse();
     article_names
+}
+
+pub fn time_of_creation(path: String) -> SystemTime {
+    let time: SystemTime = SystemTime::now();
+    match fs::metadata(path) {
+        Ok(data) => data
+            .created()
+            .expect("chrnological sorting not supported on this platform"),
+        Err(_) => time,
+    }
 }
 
 pub fn files_changed(latest_change_times: &mut HashMap<PathBuf, SystemTime>) -> Vec<PathBuf> {
@@ -137,4 +148,15 @@ pub fn delete_dir_contents(read_dir_res: Result<ReadDir, Error>) {
         }
     };
     println!("successfully removed previous content");
+}
+
+// unit tests
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_has_content_dir() {
+        assert_eq!(has_content_dir(), true);
+    }
 }

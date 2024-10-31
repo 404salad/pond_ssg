@@ -63,3 +63,16 @@ pub fn markdown_to_styled_html(
     write!(file, "{wrapped_html}")?;
     Ok(())
 }
+
+// unit tests
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_parse_markdown() {
+        let markdown_input = "# moon";
+        let html_output = parse_markdown(&markdown_input);
+        assert_eq!(html_output, "<h1>moon</h1>\n");
+    }
+}

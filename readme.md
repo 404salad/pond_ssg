@@ -18,3 +18,9 @@ state?
 - maintaing an internal state could be useful in some cases but using the content folder as the single source of truth is very powerful
 - FEATURE IDEA -> a period '.' in front of the filename for drafts or hidden articles
 
+deploying  
+currently using a github workflow to deploy on push  
+should write a script to set up a web server, install pond  
+then you can ssh into your vpc and write  
+or can i use ftp just to send the new blogs  
+
