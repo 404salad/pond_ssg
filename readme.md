@@ -24,3 +24,4 @@ should write a script to set up a web server, install pond
 then you can ssh into your vpc and write  
 or can i use ftp just to send the new blogs  
 
+

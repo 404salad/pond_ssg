@@ -32,10 +32,12 @@ fn wrap_html(markdown_output: &str, article: &str, _user_config: &config::UserCo
     <head>
     <meta charset=\"UTF-8\">
     <link rel=\"stylesheet\" href=\"../style.css\">
+    <link rel=\"stylesheet\" href=\"../prism.css\">
     <title>{article}</title>
 </head>
 <body class=\"container\">
 <a href='../index.html'>home</a>
+<script src=\"../prism.js\"></script>
 <h1>  {article}  </h1>
 <hr>
 "

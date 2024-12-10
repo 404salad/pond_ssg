@@ -49,7 +49,7 @@ fn main() {
     let mut file_level_change_times: HashMap<PathBuf, SystemTime> = individual_files
         .into_iter()
         .filter_map(|path| {
-            if path.exists() {
+            if path.exists() && path.extension().and_then(|ext| ext.to_str()) == Some("md") {
                 fs::metadata(&path)
                     .ok()
                     .and_then(|metadata| metadata.accessed().ok())
@@ -88,10 +88,12 @@ fn render_some(user_config: &UserConfig, files_changed: &Vec<PathBuf>) {
     // no need of deleting old since we will overwrite them
     // this is different since we are doing it for each file atomically
 
+    let _ = file_utils::copy_image_files();
     let article_names: Vec<String> = files_changed
         .iter()
         .filter_map(|path| path.file_name())
         .filter_map(|osstr| osstr.to_str())
+        .filter(|path| path.ends_with(".md"))
         .map(|path| path.trim_end_matches(".md"))
         .map(String::from)
         .collect();
@@ -125,6 +127,8 @@ fn render_some(user_config: &UserConfig, files_changed: &Vec<PathBuf>) {
 fn render_all(user_config: &UserConfig) {
     println!("RENDERING ALL");
     println!("---");
+
+    let _ = file_utils::copy_image_files();
     // remove previous content (clean)
     let article_dir = fs::read_dir("dist/articles");
     file_utils::delete_dir_contents(article_dir);

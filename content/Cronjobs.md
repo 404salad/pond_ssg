@@ -5,11 +5,11 @@ Here is a basic rundown-
 - crontab is the tab of all cronjobs
 - run `crontab -e` it will ask for setup, use your favorite editor
 
-```
+```bash
 export EDITOR=nvim
 ```
 now run `crontab -e` again and you should be able to access the file
-```
+```bash
 # Add this line to your crontab file to run the backup every day at 2 AM
 0 2 * * * rsync -ah --info=progress2 /path/to/source /path/to/destination
 ```

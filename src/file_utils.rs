@@ -2,8 +2,9 @@ use std::collections::HashMap;
 use std::env;
 use std::fs;
 use std::fs::ReadDir;
-use std::io::Error;
-use std::path::PathBuf;
+use std::io;
+use std::io::{Error, Result};
+use std::path::{Path, PathBuf};
 use std::time::SystemTime;
 
 pub fn content_directory_files() -> Vec<PathBuf> {
@@ -29,12 +30,14 @@ pub fn read_directory_content() -> Vec<String> {
                 match path_result {
                     Ok(path) => {
                         if let Some(path_str) = path.path().to_str() {
-                            article_names.push(
-                                path_str
-                                    .trim_start_matches("content/")
-                                    .trim_end_matches(".md")
-                                    .to_string(),
-                            );
+                            if path_str.ends_with(".md") {
+                                article_names.push(
+                                    path_str
+                                        .trim_start_matches("content/")
+                                        .trim_end_matches(".md")
+                                        .to_string(),
+                                );
+                            }
                         } else {
                             eprintln!("Error converting path to string");
                         }
@@ -50,9 +53,30 @@ pub fn read_directory_content() -> Vec<String> {
             eprintln!("Error reading directory: {}", err);
         }
     };
+    println!("{article_names:?}");
     article_names.sort_by_key(|k| time_of_creation(format!("content/{k}.md")));
     article_names.reverse();
     article_names
+}
+
+/// copy image files from the current directory to the `dist/articles` directory.
+pub fn copy_image_files() -> io::Result<()> {
+    let target_dir = Path::new("dist/articles");
+    let image_extensions = ["png", "jpg", "jpeg", "gif", "bmp"];
+    for entry in fs::read_dir("content")? {
+        let entry = entry?;
+        let path = entry.path();
+        if path.is_file() {
+            if let Some(ext) = path.extension().and_then(|ext| ext.to_str()) {
+                if image_extensions.contains(&ext.to_lowercase().as_str()) {
+                    let target_path = target_dir.join(path.file_name().unwrap());
+                    fs::copy(&path, &target_path)?;
+                    println!("Copied: {} -> {}", path.display(), target_path.display());
+                }
+            }
+        }
+    }
+    Ok(())
 }
 
 pub fn time_of_creation(path: String) -> SystemTime {
@@ -133,7 +157,7 @@ pub fn has_content_dir() -> bool {
     }
 }
 
-pub fn delete_dir_contents(read_dir_res: Result<ReadDir, Error>) {
+pub fn delete_dir_contents(read_dir_res: Result<ReadDir>) {
     println!("Removing previous content");
     if let Ok(dir) = read_dir_res {
         for entry in dir {
