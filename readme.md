@@ -1,5 +1,3 @@
-# pond ssg
-
 ## what is this?
 this is a blog and a static site generator  
 simply converts a folder of markdown files to a blog webpage  
@@ -8,7 +6,7 @@ simply converts a folder of markdown files to a blog webpage
 i wanted to write blog in markdown and static deploy it without much hassle  
 rust is fun  
 
-## Current status
+## current status
 - alpha version
 - currently using a github workflow to deploy on push  
 - need to configure it such that other people can use it easier
