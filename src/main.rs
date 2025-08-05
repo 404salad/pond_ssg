@@ -1,6 +1,3 @@
-/*
- * take --config and --watcher command line arguments
- * */
 mod config;
 pub mod consolidate_into_homepage;
 pub mod file_utils;
@@ -15,13 +12,6 @@ use std::path::PathBuf;
 use std::time::SystemTime;
 
 fn main() {
-    /*
-    * CHECK FOR THIS
-    unsuccesful parse for parsing - image2
-    deletethis.md~ No such file or directoryparsing - moo
-     (os error 2)
-    parsing - On Logging
-    */
     let term = Term::stdout();
     let _ = term.clear_screen();
     let _ = term.write_line(
@@ -45,44 +35,58 @@ fn main() {
     config::initial_config();
 
     let user_config = config::read_config().unwrap();
+    println!("User Config: \n{user_config}");
 
-    // setting intial time for watching changes
-    let mut folder_level_change_time = SystemTime::now();
-    let individual_files = file_utils::content_directory_files();
-    let mut file_level_change_times: HashMap<PathBuf, SystemTime> = individual_files
-        .into_iter()
-        .filter_map(|path| {
-            if path.exists() && path.extension().and_then(|ext| ext.to_str()) == Some("md") {
-                fs::metadata(&path)
-                    .ok()
-                    .and_then(|metadata| metadata.accessed().ok())
-                    .map(|time| (path, time))
+    let cl_config = config::read_cl_args();
+
+    if cl_config.help {
+        println!("This is a cli tool for converting markdown to blog");
+        println!("Put your markdown blogs in /content");
+        println!("configure name and author in config.toml");
+        println!("use the --watch flag for auto-running on detecting changes");
+        println!("use the --help flag for this menu");
+        println!("use the --silent flag to suppress all stdout");
+        return;
+    }
+
+    if cl_config.silent {
+        todo!("use a logger to impl");
+    }
+
+    if cl_config.watcher {
+        // setting initial time for watching changes
+        let mut folder_level_change_time = SystemTime::now();
+        let individual_files = file_utils::content_directory_files();
+        let mut file_level_change_times: HashMap<PathBuf, SystemTime> = individual_files
+            .into_iter()
+            .filter_map(|path| {
+                if path.exists() && path.extension().and_then(|ext| ext.to_str()) == Some("md") {
+                    fs::metadata(&path)
+                        .ok()
+                        .and_then(|metadata| metadata.accessed().ok())
+                        .map(|time| (path, time))
+                } else {
+                    None
+                }
+            })
+            .collect();
+
+        // loop this based on file changes
+        loop {
+            if file_utils::no_folder_level_changes(&mut folder_level_change_time) {
+                let files_changed = file_utils::files_changed(&mut file_level_change_times);
+                if files_changed.is_empty() {
+                    continue;
+                }
+                render_some(&user_config, &files_changed);
             } else {
-                None
+                render_all(&user_config);
             }
-        })
-        .collect();
+        }
+    }
+    else {
+        render_all(&user_config);
 
-    // loop this based on file changes
-    // TODO: make it in a seperate thread? but then have to deal with communicating bw threads
-    // ie a thread to just check if changes have been made so that parsing can be non blocking
-    loop {
-        /*
-        let files_changed = file_utils::files_changed(&mut file_level_change_times);
-        if files_changed.is_empty() {
-            continue;
-        }
-        render_some(&user_config, &files_changed);
-        */
-        if file_utils::no_folder_level_changes(&mut folder_level_change_time) {
-            let files_changed = file_utils::files_changed(&mut file_level_change_times);
-            if files_changed.is_empty() {
-                continue;
-            }
-            render_some(&user_config, &files_changed);
-        } else {
-            render_all(&user_config);
-        }
     }
 }
 
@@ -109,20 +113,20 @@ fn render_some(user_config: &UserConfig, files_changed: &Vec<PathBuf>) {
         let user_config_for_threads = user_config.clone();
         match parse_one_article::markdown_to_styled_html(&article_name, &user_config_for_threads) {
             Ok(_) => {
-                println!("succesful parse for {article_name}")
+                println!("successful parse for {article_name}")
             }
             Err(e) => {
-                eprintln!(" unsuccesful parse for {article_name}: {}", e)
+                eprintln!(" unsuccessful parse for {article_name}: {e}")
             }
         }
     });
 
     match consolidate_into_homepage::create_homepage(&user_config) {
         Ok(_) => {
-            println!("partial refersh successfull!, view in dist/index.html")
+            println!("partial refresh successfully!, view in dist/index.html")
         }
         Err(e) => {
-            eprintln!("unsuccesful in creating homepage {}", e)
+            eprintln!("unsuccessful in creating homepage {e}")
         }
     };
 }
@@ -139,14 +143,14 @@ fn render_all(user_config: &UserConfig) {
     let article_names = file_utils::read_directory_content();
     //println!("{:?}", article_names);
 
-    // rebuilding all the articles in content directory (parallely)
+    // rebuilding all the articles in content directory (parallel)
 
     article_names.par_iter().for_each(|article_name| {
         let user_config_for_threads = user_config.clone();
         match parse_one_article::markdown_to_styled_html(&article_name, &user_config_for_threads) {
             Ok(_) => {}
             Err(e) => {
-                eprintln!("unsuccesful parse for {article_name} {}", e)
+                eprintln!("unsuccessful parse for {article_name} {}", e)
             }
         }
     });
@@ -157,7 +161,7 @@ fn render_all(user_config: &UserConfig) {
             println!("added all blogs to homepage, view in dist/index.html")
         }
         Err(e) => {
-            eprintln!("unsuccesful in creating homepage {}", e)
+            eprintln!("unsuccessful in creating homepage {}", e)
         }
     };
 }

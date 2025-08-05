@@ -3,7 +3,7 @@ use std::env;
 use std::fs;
 use std::fs::ReadDir;
 use std::io;
-use std::io::{Error, Result};
+use std::io::{Result};
 use std::path::{Path, PathBuf};
 use std::time::SystemTime;
 
@@ -172,6 +172,9 @@ pub fn delete_dir_contents(read_dir_res: Result<ReadDir>) {
         }
     };
     println!("successfully removed previous content");
+}
+
+pub fn create_inital_directories(read_dir_res: Result<ReadDir>) {
 }
 
 // unit tests

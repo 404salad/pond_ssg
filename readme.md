@@ -17,10 +17,11 @@ rust is fun
 - refactor: cli so it's easier to set up and manage projects
 - docs: a simple setup guide so that users can simply install binaries and potential instructions
 - feat: add custom themes
-- [done] refactor: use html templating (maud)
 - feat: how to add time to the blogs (maybe for now get file created time but that's hacky)
 - feat: figure out a drafts system (when a filename starts with draft or a dot consider it to be a draft?)
-- feat: maybe watcher for live reload 
 - feat: maybe some backups thing
 - test: write tests
-- feat: in a config file have flags for features like javascript (don't need to bundle if the user doesn't need it)
+- * feat: in a config file have flags for features like javascript (don't need to bundle if the user doesn't need it)
+
+- (done) refactor: use html templating (maud)
+- (done) feat: maybe watcher for live reload 
