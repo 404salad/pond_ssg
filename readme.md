@@ -22,6 +22,7 @@ rust is fun
 - feat: maybe some backups thing
 - test: write tests
 - * feat: in a config file have flags for features like javascript (don't need to bundle if the user doesn't need it)
+    ONGOING -> FIX CRATE PROJECT DIRS AND GENEERATE THE CSS FILE AND JS FILE IF FLAG IS THERE
 
 - (done) refactor: use html templating (maud)
 - (done) feat: maybe watcher for live reload 

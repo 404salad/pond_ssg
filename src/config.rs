@@ -5,7 +5,7 @@
  * */
 use serde::{Deserialize, Serialize};
 use std::fmt;
-use std::fs::{read_to_string, File};
+use std::fs;
 use std::io::{self, Write};
 use std::path::Path;
 use std::env;
@@ -37,6 +37,8 @@ pub struct CommandLineArgs {
 }
 
 pub fn initial_config() {
+    let err = create_project_dirs();
+
     // only run config setup if the config file doesn't exist
     if Path::new("config.toml").exists() {
         return;
@@ -71,7 +73,7 @@ pub fn initial_config() {
     // writing to config file
     let config_path = Path::new("config.toml");
 
-    let mut config_file = match File::create(&config_path) {
+    let mut config_file = match fs::File::create(&config_path) {
         Err(why) => panic!("cant create config file because {}", why),
         Ok(file) => file,
     };
@@ -83,11 +85,17 @@ pub fn initial_config() {
 }
 
 pub fn read_config() -> Result<UserConfig, toml::de::Error> {
-    let config_file_data = read_to_string("config.toml").unwrap_or_else(|_| String::new());
+    let config_file_data = fs::read_to_string("config.toml").unwrap_or_else(|_| String::new());
 
     let config: UserConfig = toml::from_str(&config_file_data)?;
 
     Ok(config)
+}
+
+fn create_project_dirs() -> io::Result<()> {
+    fs::create_dir_all("dist")?;
+    fs::create_dir_all("dist/articles")?;
+    Ok(())
 }
 
 pub fn read_cl_args() -> CommandLineArgs {

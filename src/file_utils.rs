@@ -174,8 +174,7 @@ pub fn delete_dir_contents(read_dir_res: Result<ReadDir>) {
     println!("successfully removed previous content");
 }
 
-pub fn create_inital_directories(read_dir_res: Result<ReadDir>) {
-}
+
 
 // unit tests
 #[cfg(test)]
