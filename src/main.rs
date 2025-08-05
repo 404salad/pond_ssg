@@ -1,4 +1,7 @@
-pub mod config;
+/*
+ * take --config and --watcher command line arguments
+ * */
+mod config;
 pub mod consolidate_into_homepage;
 pub mod file_utils;
 pub mod parse_one_article;
@@ -134,7 +137,7 @@ fn render_all(user_config: &UserConfig) {
     file_utils::delete_dir_contents(article_dir);
 
     let article_names = file_utils::read_directory_content();
-    // println!("{:?}", article_names);
+    //println!("{:?}", article_names);
 
     // rebuilding all the articles in content directory (parallely)
 

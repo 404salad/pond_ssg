@@ -1,3 +1,8 @@
+/*
+ * instead of setting inital config this way, 
+ * just create a template file which the user can open and fill in 
+ * create a --config thing so that user can override file name if needed
+ * */
 use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::fs::{read_to_string, File};

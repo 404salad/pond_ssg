@@ -7,6 +7,7 @@ edition = "2021"
 
 [dependencies]
 console = "0.15.8"
+maud = "0.27.0"
 pulldown-cmark = "0.9.3"
 rayon = "1.10.0"
 serde = { version="1.0.196", features = ["derive"] }
