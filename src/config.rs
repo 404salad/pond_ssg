@@ -37,7 +37,9 @@ pub struct CommandLineArgs {
 }
 
 pub fn initial_config() {
-    let err = create_project_dirs();
+    if let Err(err) = create_project_files() {
+        eprintln!("Could not create project files {err}")
+    }
 
     // only run config setup if the config file doesn't exist
     if Path::new("config.toml").exists() {
@@ -92,9 +94,12 @@ pub fn read_config() -> Result<UserConfig, toml::de::Error> {
     Ok(config)
 }
 
-fn create_project_dirs() -> io::Result<()> {
+fn create_project_files() -> io::Result<()> {
+    fs::create_dir_all("content")?;
     fs::create_dir_all("dist")?;
     fs::create_dir_all("dist/articles")?;
+    let main_css = include_str!("../styling_deps/style.css");
+    fs::write("dist/style.css", main_css)?;
     Ok(())
 }
 

@@ -174,6 +174,14 @@ pub fn delete_dir_contents(read_dir_res: Result<ReadDir>) {
     println!("successfully removed previous content");
 }
 
+pub fn create_code_formatting_files() -> std::io::Result<()>{
+    let prismjs = include_str!("../styling_deps/prism.js");
+    let prismcss = include_str!("../styling_deps/prism.css");
+    fs::write("dist/prism.js", prismjs)?;
+    fs::write("dist/prism.css", prismcss)?;
+    Ok(())
+}
+
 
 
 // unit tests

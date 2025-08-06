@@ -28,7 +28,7 @@ fn main() {
     if file_utils::has_content_dir() {
         println!("content/ found");
     } else {
-        println!("kindly make a content/ directory");
+        println!("kindly make a content/ directory (check if you are running from root dir of the project)");
         return;
     }
 
@@ -36,6 +36,12 @@ fn main() {
 
     let user_config = config::read_config().unwrap();
     println!("User Config: \n{user_config}");
+
+    if user_config.code_formatting {
+        if let Err(e) = file_utils::create_code_formatting_files() {
+            eprintln!("Error creating support files for code formatting, consider setting code_formatting off from config.toml {e}"); // TODO only log error dont show?
+        }
+    }
 
     let cl_config = config::read_cl_args();
 
