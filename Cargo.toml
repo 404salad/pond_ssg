@@ -7,8 +7,8 @@ authors = ["sahil <404salad@gmail.com>"]
 description = "A simple static site generator in Rust."
 repository = "https://github.com/404salad/pond_ssg"
 readme = "readme.md"
-keywords = ["static-site-generator", "ssg", "rust"]
-categories = ["command-line-utilities", "web-programming"]
+keywords = ["blog", "ssg", "rust", "site-generator"]
+categories = ["cli", "website", "blog"]
 exclude = [
     "content/**",
     "dist/**",
