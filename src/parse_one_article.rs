@@ -23,19 +23,23 @@ fn read_markdown<P: AsRef<Path>>(path: P) -> Result<String, Error> {
     Ok(markdown_input)
 }
 
-fn wrap_html(markdown_output: &str, article: &str, _user_config: &config::UserConfig) -> String {
+fn wrap_html(markdown_output: &str, article: &str, user_config: &config::UserConfig) -> String {
     let page: Markup = html! {
         (DOCTYPE)
         html lang="en" {
             head {
                 meta charset="UTF-8";
                 link rel="stylesheet" href="../style.css";
-                link rel="stylesheet" href="../prism.css";
+                @if user_config.code_formatting {
+                    link rel="stylesheet" href="../prism.css";
+                }
                 title { (article) }
             }
             body class="container" {
                 a href="../index.html" { "home" }
-                script src="../prism.js" {}
+                @if user_config.code_formatting {
+                    script src="../prism.js" {}
+                }
                 h1 { (article) }
                 hr;
                 // raw HTML from markdown

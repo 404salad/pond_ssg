@@ -184,7 +184,19 @@ pub fn create_code_formatting_files() -> std::io::Result<()>{
     Ok(())
 }
 
+pub fn remove_code_formatting_files() -> std::io::Result<()>{
+    let prismjs = Path::new("dist/prism.js");
+    if prismjs.exists(){
+        fs::remove_file(prismjs)?;
+    }
 
+    let prismcss = Path::new("dist/prism.css");
+    if prismcss.exists(){
+        fs::remove_file(prismcss)?;
+    }
+
+    Ok(())
+}
 
 // unit tests
 #[cfg(test)]

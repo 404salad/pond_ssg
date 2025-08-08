@@ -21,9 +21,9 @@ rust is fun
 - feat: figure out a drafts system (when a filename starts with draft or a dot consider it to be a draft?)
 - feat: maybe some backups thing
 - test: write tests
-- bug: when code formatting is false then remove the prism files
 - todo: make it availabe in cargo
-- * feat: write a simple logger so that --silent works
+- (done) bug: when code formatting is false then remove the prism files
+- (done) feat: write a simple logger so that --silent works
 - (done) feat: in a config file have flags for features like javascript (don't need to bundle if the user doesn't need it)
 - (done) refactor: use html templating (maud)
 - (done) feat: maybe watcher for live reload 

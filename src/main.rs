@@ -50,6 +50,12 @@ fn main() {
             log_info(format!("{}",e)); 
         }
     }
+    else {
+        if let Err(e) = file_utils::remove_code_formatting_files() {
+            log_info("Error removing code formatting files"); 
+            log_info(format!("{}",e)); 
+        }
+    }
 
     // Everything is configured
     
