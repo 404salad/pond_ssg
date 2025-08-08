@@ -34,9 +34,10 @@ pub struct CommandLineArgs {
     pub watcher: bool,
     pub help: bool,
     pub silent: bool,
+    pub debug: bool,
 }
 
-pub fn initial_config() {
+pub fn initial_setup() {
     if let Err(err) = create_project_files() {
         eprintln!("Could not create project files {err}")
     }
@@ -108,6 +109,7 @@ pub fn read_cl_args() -> CommandLineArgs {
     let mut watcher = false;
     let mut help = false;
     let mut silent = false;
+    let mut debug = false;
     for arg in args {
         if arg.trim().starts_with("--watch") {
             watcher = true;
@@ -118,10 +120,14 @@ pub fn read_cl_args() -> CommandLineArgs {
         else if arg.trim().starts_with("--silent") {
             silent = true;
         }
+        else if arg.trim().starts_with("--debug") {
+            debug = true;
+        }
     }
     CommandLineArgs {
         watcher,
         help,
         silent,
+        debug,
     }
 }

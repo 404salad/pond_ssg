@@ -1,4 +1,5 @@
 use super::config;
+use maud::{html, Markup, DOCTYPE};
 use pulldown_cmark::{html, Options, Parser};
 use std::fs::File;
 use std::io::prelude::*;
@@ -22,31 +23,28 @@ fn read_markdown<P: AsRef<Path>>(path: P) -> Result<String, Error> {
     Ok(markdown_input)
 }
 
-// wrapper for input so that standard html and styles can be injected after converting to html
 fn wrap_html(markdown_output: &str, article: &str, _user_config: &config::UserConfig) -> String {
-    let mut wrapped_html = String::from(markdown_output);
-    wrapped_html = format!(
-        "
-<!DOCTYPE html>
-    <html lang=\"en\">
-    <head>
-    <meta charset=\"UTF-8\">
-    <link rel=\"stylesheet\" href=\"../style.css\">
-    <link rel=\"stylesheet\" href=\"../prism.css\">
-    <title>{article}</title>
-</head>
-<body class=\"container\">
-<a href='../index.html'>home</a>
-<script src=\"../prism.js\"></script>
-<h1>  {article}  </h1>
-<hr>
-"
-    ) + &wrapped_html
-        + "
-</body>
-</html>
-";
-    wrapped_html
+    let page: Markup = html! {
+        (DOCTYPE)
+        html lang="en" {
+            head {
+                meta charset="UTF-8";
+                link rel="stylesheet" href="../style.css";
+                link rel="stylesheet" href="../prism.css";
+                title { (article) }
+            }
+            body class="container" {
+                a href="../index.html" { "home" }
+                script src="../prism.js" {}
+                h1 { (article) }
+                hr;
+                // raw HTML from markdown
+                (maud::PreEscaped(markdown_output))
+            }
+        }
+    };
+
+    page.into_string()
 }
 
 /// convert a single .md file to html
@@ -54,7 +52,6 @@ pub fn markdown_to_styled_html(
     article: &str,
     user_config: &config::UserConfig,
 ) -> std::io::Result<()> {
-    println!("parsing - {article}");
     let mut input_path = String::from("content/") + &article.to_owned();
     let mut output_path = String::from("dist/articles/") + &article.to_owned();
     input_path.push_str(".md");

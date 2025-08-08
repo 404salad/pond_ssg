@@ -1,3 +1,4 @@
+use crate::logger::log_info;
 use std::collections::HashMap;
 use std::env;
 use std::fs;
@@ -53,7 +54,7 @@ pub fn read_directory_content() -> Vec<String> {
             eprintln!("Error reading directory: {}", err);
         }
     };
-    println!("{article_names:?}");
+    //println!("{article_names:?}");
     article_names.sort_by_key(|k| time_of_creation(format!("content/{k}.md")));
     article_names.reverse();
     article_names
@@ -61,6 +62,7 @@ pub fn read_directory_content() -> Vec<String> {
 
 /// copy image files from the current directory to the `dist/articles` directory.
 pub fn copy_image_files() -> io::Result<()> {
+    log_info("copying static assets (images)");
     let target_dir = Path::new("dist/articles");
     let image_extensions = ["png", "jpg", "jpeg", "gif", "bmp"];
     for entry in fs::read_dir("content")? {
@@ -71,7 +73,7 @@ pub fn copy_image_files() -> io::Result<()> {
                 if image_extensions.contains(&ext.to_lowercase().as_str()) {
                     let target_path = target_dir.join(path.file_name().unwrap());
                     fs::copy(&path, &target_path)?;
-                    println!("Copied: {} -> {}", path.display(), target_path.display());
+                    log_info(format!("\tCopied: {} -> {}", path.display(), target_path.display()));
                 }
             }
         }
@@ -158,7 +160,7 @@ pub fn has_content_dir() -> bool {
 }
 
 pub fn delete_dir_contents(read_dir_res: Result<ReadDir>) {
-    println!("Removing previous content");
+    log_info("Removing previous content");
     if let Ok(dir) = read_dir_res {
         for entry in dir {
             if let Ok(entry) = entry {
@@ -171,7 +173,7 @@ pub fn delete_dir_contents(read_dir_res: Result<ReadDir>) {
             };
         }
     };
-    println!("successfully removed previous content");
+    log_info("successfully removed previous content");
 }
 
 pub fn create_code_formatting_files() -> std::io::Result<()>{
