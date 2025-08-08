@@ -6,6 +6,16 @@ simply converts a folder of markdown files to a blog webpage
 I wanted to write blog in markdown and static deploy it without much hassle  
 rust is fun  
 
+## how to use?
+just install using cargo  
+```bash
+cargo install pond_ssg
+```
+then just run the cli!  
+```bash
+pond_ssg --help
+```
+
 ## current status
 - alpha version
 - currently using a GitHub workflow to deploy on push  
