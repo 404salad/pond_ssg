@@ -151,7 +151,7 @@ fn render_all(user_config: &UserConfig) {
 
     let article_names = file_utils::read_directory_content();
 
-    log_info("Generating html for all the articles ->  logs");
+    log_info("Generating html for all the articles -> ");
 
     // rebuilding all the articles in content directory (parallel)
     article_names.par_iter().for_each(|article_name| {
