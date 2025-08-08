@@ -21,6 +21,22 @@ pub fn content_directory_files() -> Vec<PathBuf> {
         .collect();
     paths
 }
+
+fn exclude_drafts(articles: Vec<String>) -> Vec<String> {
+    let mut filtered_articles: Vec<String> = vec![];
+
+    for article in articles {
+        if article.starts_with("_"){
+            log_info(format!("ignoring drafts: {article}"))
+        }
+        else {
+            filtered_articles.push(article);
+        }
+    }
+
+    filtered_articles
+}
+
 pub fn read_directory_content() -> Vec<String> {
     let mut article_names: Vec<String> = vec![];
     let paths_result = fs::read_dir("content");
@@ -57,6 +73,8 @@ pub fn read_directory_content() -> Vec<String> {
     //println!("{article_names:?}");
     article_names.sort_by_key(|k| time_of_creation(format!("content/{k}.md")));
     article_names.reverse();
+
+    article_names = exclude_drafts(article_names.clone());
     article_names
 }
 
