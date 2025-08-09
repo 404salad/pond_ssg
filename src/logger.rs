@@ -1,11 +1,11 @@
-use std::sync::OnceLock;
 use std::fmt::Display;
+use std::sync::OnceLock;
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum LogLevel {
     Silent, // only error logs
     Normal, // everything
-    // TODO: maybe add debug level
+            // TODO: maybe add debug level
 }
 
 static LOG_LEVEL: OnceLock<LogLevel> = OnceLock::new();
@@ -24,4 +24,3 @@ pub fn log_info<T: Display>(msg: T) {
         println!("{}", msg);
     }
 }
-

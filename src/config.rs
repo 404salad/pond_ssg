@@ -1,20 +1,20 @@
 /*
  * instead of setting initial config this way,
- * just create a template file which the user can open and fill in 
+ * just create a template file which the user can open and fill in
  * create a --config thing so that user can override file name if needed
  * */
 use serde::{Deserialize, Serialize};
+use std::env;
 use std::fmt;
 use std::fs;
 use std::io::{self, Write};
 use std::path::Path;
-use std::env;
 
 #[derive(Deserialize, Clone, Serialize)]
 pub struct UserConfig {
     pub author_name: String,
     pub blog_name: String,
-    pub code_formatting: bool,// Set to false by default
+    pub code_formatting: bool, // Set to false by default
 }
 
 impl fmt::Display for UserConfig {
@@ -65,7 +65,7 @@ pub fn initial_setup() {
     let user = UserConfig {
         author_name,
         blog_name,
-        code_formatting:false, // set to false
+        code_formatting: false, // set to false
     };
 
     let toml_config: String = match toml::to_string(&user) {
@@ -113,14 +113,11 @@ pub fn read_cl_args() -> CommandLineArgs {
     for arg in args {
         if arg.trim().starts_with("--watch") {
             watcher = true;
-        }
-        else if arg.trim().starts_with("--help") {
+        } else if arg.trim().starts_with("--help") {
             help = true;
-        }
-        else if arg.trim().starts_with("--silent") {
+        } else if arg.trim().starts_with("--silent") {
             silent = true;
-        }
-        else if arg.trim().starts_with("--debug") {
+        } else if arg.trim().starts_with("--debug") {
             debug = true;
         }
     }

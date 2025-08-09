@@ -1,8 +1,8 @@
 use crate::config;
-use maud::{html, Markup, DOCTYPE, PreEscaped};
+use crate::file_utils::read_directory_content;
+use maud::{html, Markup, PreEscaped, DOCTYPE};
 use std::fs::File;
 use std::io::Write;
-use crate::file_utils::read_directory_content;
 
 pub fn create_homepage(user_config: &config::UserConfig) -> std::io::Result<()> {
     let article_names = read_directory_content();

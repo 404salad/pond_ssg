@@ -4,7 +4,7 @@ use std::env;
 use std::fs;
 use std::fs::ReadDir;
 use std::io;
-use std::io::{Result};
+use std::io::Result;
 use std::path::{Path, PathBuf};
 use std::time::SystemTime;
 
@@ -26,10 +26,9 @@ fn exclude_drafts(articles: Vec<String>) -> Vec<String> {
     let mut filtered_articles: Vec<String> = vec![];
 
     for article in articles {
-        if article.starts_with("_"){
+        if article.starts_with("_") {
             log_info(format!("ignoring drafts: {article}"))
-        }
-        else {
+        } else {
             filtered_articles.push(article);
         }
     }
@@ -91,7 +90,11 @@ pub fn copy_image_files() -> io::Result<()> {
                 if image_extensions.contains(&ext.to_lowercase().as_str()) {
                     let target_path = target_dir.join(path.file_name().unwrap());
                     fs::copy(&path, &target_path)?;
-                    log_info(format!("\tCopied: {} -> {}", path.display(), target_path.display()));
+                    log_info(format!(
+                        "\tCopied: {} -> {}",
+                        path.display(),
+                        target_path.display()
+                    ));
                 }
             }
         }
@@ -194,7 +197,7 @@ pub fn delete_dir_contents(read_dir_res: Result<ReadDir>) {
     log_info("successfully removed previous content");
 }
 
-pub fn create_code_formatting_files() -> std::io::Result<()>{
+pub fn create_code_formatting_files() -> std::io::Result<()> {
     let prismjs = include_str!("../styling_deps/prism.js");
     let prismcss = include_str!("../styling_deps/prism.css");
     fs::write("dist/prism.js", prismjs)?;
@@ -202,14 +205,14 @@ pub fn create_code_formatting_files() -> std::io::Result<()>{
     Ok(())
 }
 
-pub fn remove_code_formatting_files() -> std::io::Result<()>{
+pub fn remove_code_formatting_files() -> std::io::Result<()> {
     let prismjs = Path::new("dist/prism.js");
-    if prismjs.exists(){
+    if prismjs.exists() {
         fs::remove_file(prismjs)?;
     }
 
     let prismcss = Path::new("dist/prism.css");
-    if prismcss.exists(){
+    if prismcss.exists() {
         fs::remove_file(prismcss)?;
     }
 

@@ -1,12 +1,12 @@
 mod config;
 mod consolidate_into_homepage;
 mod file_utils;
-mod parse_one_article;
 pub mod logger;
+mod parse_one_article;
 
 use config::UserConfig;
 use rayon::prelude::*;
-use std::{collections::HashMap};
+use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
 use std::time::SystemTime;
@@ -23,18 +23,16 @@ fn main() {
         Configure name and author in config.toml
         Use the --watch flag for auto-running on detecting changes
         Use the --help flag for this menu
-        Use the --silent flag to suppress all stdout"#
+        Use the --silent flag to suppress all stdout"#,
         );
         return;
     }
 
     if cl_config.silent {
         set_log_level(logger::LogLevel::Silent);
-    }
-    else if cl_config.debug {
+    } else if cl_config.debug {
         log_info("implement this later")
-    }
-    else {
+    } else {
         set_log_level(logger::LogLevel::Normal);
     }
 
@@ -46,20 +44,20 @@ fn main() {
 
     if user_config.code_formatting {
         if let Err(e) = file_utils::create_code_formatting_files() {
-            log_info("Error creating support files for code formatting, consider setting code_formatting off from config.toml"); 
-            log_info(format!("{}",e)); 
+            log_info("Error creating support files for code formatting, consider setting code_formatting off from config.toml");
+            log_info(format!("{}", e));
         }
-    }
-    else {
+    } else {
         if let Err(e) = file_utils::remove_code_formatting_files() {
-            log_info("Error removing code formatting files"); 
-            log_info(format!("{}",e)); 
+            log_info("Error removing code formatting files");
+            log_info(format!("{}", e));
         }
     }
 
     // Everything is configured
-    
-    log_info("
+
+    log_info(
+        "
 ██████   ██████  ███    ██ ██████      ███████ ███████  ██████  
 ██   ██ ██    ██ ████   ██ ██   ██     ██      ██      ██       
 ██████  ██    ██ ██ ██  ██ ██   ██     ███████ ███████ ██   ███ 
@@ -67,7 +65,8 @@ fn main() {
 ██       ██████  ██   ████ ██████      ███████ ███████  ██████  
 
 A simple cli tool to convert markdown to blog
-");
+",
+    );
 
     if cl_config.watcher {
         // setting initial time for watching changes
@@ -99,10 +98,8 @@ A simple cli tool to convert markdown to blog
                 render_all(&user_config);
             }
         }
-    }
-    else {
+    } else {
         render_all(&user_config);
-
     }
 }
 
@@ -121,13 +118,14 @@ fn render_some(user_config: &UserConfig, files_changed: &Vec<PathBuf>) {
         .map(String::from)
         .collect();
 
-    log_info(format!("Generating html for modified articles -> {article_names:?} blogs"));
+    log_info(format!(
+        "Generating html for modified articles -> {article_names:?} blogs"
+    ));
 
     article_names.par_iter().for_each(|article_name| {
         let user_config_for_threads = user_config.clone();
         match parse_one_article::markdown_to_styled_html(&article_name, &user_config_for_threads) {
-            Ok(_) => {
-            }
+            Ok(_) => {}
             Err(e) => {
                 eprintln!(" unsuccessful parse for {article_name}: {e}")
             }
@@ -135,8 +133,7 @@ fn render_some(user_config: &UserConfig, files_changed: &Vec<PathBuf>) {
     });
 
     match consolidate_into_homepage::create_homepage(&user_config) {
-        Ok(_) => {
-        }
+        Ok(_) => {}
         Err(e) => {
             eprintln!("unsuccessful in creating homepage {e}")
         }
@@ -157,9 +154,7 @@ fn render_all(user_config: &UserConfig) {
     article_names.par_iter().for_each(|article_name| {
         let user_config_for_threads = user_config.clone();
         match parse_one_article::markdown_to_styled_html(&article_name, &user_config_for_threads) {
-            Ok(_) => {
-                log_info(format!("\tparsed  {article_name} successfully"))
-            }
+            Ok(_) => log_info(format!("\tparsed  {article_name} successfully")),
             Err(e) => {
                 eprintln!("unsuccessful parse for {article_name} {}", e)
             }
@@ -167,9 +162,7 @@ fn render_all(user_config: &UserConfig) {
     });
     log_info("generated all html pages");
     match consolidate_into_homepage::create_homepage(&user_config) {
-        Ok(_) => {
-            log_info("added all blogs to homepage, view in dist/index.html")
-        }
+        Ok(_) => log_info("added all blogs to homepage, view in dist/index.html"),
         Err(e) => {
             eprintln!("unsuccessful in creating homepage {}", e)
         }
