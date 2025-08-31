@@ -39,3 +39,4 @@ pond_ssg --help
 - (done) feat: in a config file have flags for features like javascript (don't need to bundle if the user doesn't need it)
 - (done) refactor: use html templating (maud)
 - (done) feat: maybe watcher for live reload 
+- BUG: images not going aoweijfaowefaoiwejf;oawejfo

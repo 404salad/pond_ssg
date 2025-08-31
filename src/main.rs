@@ -108,7 +108,7 @@ fn render_some(user_config: &UserConfig, files_changed: &Vec<PathBuf>) {
     // no need of deleting old since we will overwrite them
     // this is different since we are doing it for each file atomically
 
-    let _ = file_utils::copy_image_files();
+    file_utils::copy_image_files().unwrap();
     let article_names: Vec<String> = files_changed
         .iter()
         .filter_map(|path| path.file_name())
