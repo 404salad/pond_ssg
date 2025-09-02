@@ -32,11 +32,12 @@ pond_ssg --help
 - test: write tests
 - feat: add an option to enable basic analytics 
 - feat: somehow add mailing list support
-- todo: make it availabe in cargo (crates.io) ie. write the docstrings and then cargo publish
+- clean: move images to a static folder inside dist instead of at root
+- (done) todo: make it availabe in cargo (crates.io) ie. write the docstrings and then cargo publish
 - (done) feat: figure out a drafts system (when a filename starts with an undescore consider it to be a draft?)
 - (done) bug: when code formatting is false then remove the prism files
 - (done) feat: write a simple logger so that --silent works
 - (done) feat: in a config file have flags for features like javascript (don't need to bundle if the user doesn't need it)
 - (done) refactor: use html templating (maud)
 - (done) feat: maybe watcher for live reload 
-- BUG: images not going aoweijfaowefaoiwejf;oawejfo
+- (done) bug: images not copying over

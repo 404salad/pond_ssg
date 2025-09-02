@@ -107,8 +107,8 @@ fn render_some(user_config: &UserConfig, files_changed: &Vec<PathBuf>) {
     // remove previous content (clean)
     // no need of deleting old since we will overwrite them
     // this is different since we are doing it for each file atomically
-
     file_utils::copy_image_files().unwrap();
+
     let article_names: Vec<String> = files_changed
         .iter()
         .filter_map(|path| path.file_name())
@@ -141,10 +141,11 @@ fn render_some(user_config: &UserConfig, files_changed: &Vec<PathBuf>) {
 }
 
 fn render_all(user_config: &UserConfig) {
-    let _ = file_utils::copy_image_files();
     // remove previous content (clean)
     let article_dir = fs::read_dir("dist/articles");
     file_utils::delete_dir_contents(article_dir);
+
+    file_utils::copy_image_files().unwrap();
 
     let article_names = file_utils::read_directory_content();
 

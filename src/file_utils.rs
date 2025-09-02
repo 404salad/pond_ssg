@@ -81,6 +81,7 @@ pub fn read_directory_content() -> Vec<String> {
 pub fn copy_image_files() -> io::Result<()> {
     log_info("copying static assets (images)");
     let target_dir = Path::new("dist/articles");
+    fs::create_dir_all(target_dir)?;
     let image_extensions = ["png", "jpg", "jpeg", "gif", "bmp"];
     for entry in fs::read_dir("content")? {
         let entry = entry?;
@@ -89,7 +90,7 @@ pub fn copy_image_files() -> io::Result<()> {
             if let Some(ext) = path.extension().and_then(|ext| ext.to_str()) {
                 if image_extensions.contains(&ext.to_lowercase().as_str()) {
                     let target_path = target_dir.join(path.file_name().unwrap());
-                    fs::copy(&path, &target_path)?;
+                    fs::copy(&path, &target_path).unwrap();
                     log_info(format!(
                         "\tCopied: {} -> {}",
                         path.display(),
