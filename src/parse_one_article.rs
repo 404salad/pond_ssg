@@ -56,8 +56,8 @@ pub fn markdown_to_styled_html(
     article: &str,
     user_config: &config::UserConfig,
 ) -> std::io::Result<()> {
-    let mut input_path = String::from("content/") + &article.to_owned();
-    let mut output_path = String::from("dist/articles/") + &article.to_owned();
+    let mut input_path = String::from("content/") + article;
+    let mut output_path = String::from("dist/articles/") + article;
     input_path.push_str(".md");
     output_path.push_str(".html");
     let html_from_md = parse_markdown(&read_markdown(input_path)?);

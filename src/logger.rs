@@ -21,6 +21,6 @@ fn current_level() -> LogLevel {
 // Accepts anything that implements Display
 pub fn log_info<T: Display>(msg: T) {
     if current_level() != LogLevel::Silent {
-        println!("{}", msg);
+        println!("{msg}");
     }
 }

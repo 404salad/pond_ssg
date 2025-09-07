@@ -76,13 +76,13 @@ pub fn initial_setup() {
     // writing to config file
     let config_path = Path::new("config.toml");
 
-    let mut config_file = match fs::File::create(&config_path) {
-        Err(why) => panic!("cant create config file because {}", why),
+    let mut config_file = match fs::File::create(config_path) {
+        Err(why) => panic!("cant create config file because {why}"),
         Ok(file) => file,
     };
 
     match config_file.write_all(toml_config.as_bytes()) {
-        Err(why) => panic!("cant write to config file because {}", why),
+        Err(why) => panic!("cant write to config file because {why}"),
         Ok(_) => println!("successfully created config file"),
     }
 }

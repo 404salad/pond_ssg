@@ -37,7 +37,7 @@ fn main() {
     }
 
     config::initial_setup();
-    assert_eq!(file_utils::has_content_dir(), true);
+    assert!(file_utils::has_content_dir());
 
     let user_config = config::read_config().unwrap();
     log_info(format!("User Config: \n{user_config}"));
@@ -45,13 +45,11 @@ fn main() {
     if user_config.code_formatting {
         if let Err(e) = file_utils::create_code_formatting_files() {
             log_info("Error creating support files for code formatting, consider setting code_formatting off from config.toml");
-            log_info(format!("{}", e));
+            log_info(format!("{e}"));
         }
-    } else {
-        if let Err(e) = file_utils::remove_code_formatting_files() {
-            log_info("Error removing code formatting files");
-            log_info(format!("{}", e));
-        }
+    } else if let Err(e) = file_utils::remove_code_formatting_files() {
+        log_info("Error removing code formatting files");
+        log_info(format!("{e}"));
     }
 
     // Everything is configured
@@ -103,7 +101,7 @@ A simple cli tool to convert markdown to blog
     }
 }
 
-fn render_some(user_config: &UserConfig, files_changed: &Vec<PathBuf>) {
+fn render_some(user_config: &UserConfig, files_changed: &[PathBuf]) {
     // remove previous content (clean)
     // no need of deleting old since we will overwrite them
     // this is different since we are doing it for each file atomically
@@ -124,7 +122,7 @@ fn render_some(user_config: &UserConfig, files_changed: &Vec<PathBuf>) {
 
     article_names.par_iter().for_each(|article_name| {
         let user_config_for_threads = user_config.clone();
-        match parse_one_article::markdown_to_styled_html(&article_name, &user_config_for_threads) {
+        match parse_one_article::markdown_to_styled_html(article_name, &user_config_for_threads) {
             Ok(_) => {}
             Err(e) => {
                 eprintln!(" unsuccessful parse for {article_name}: {e}")
@@ -132,7 +130,7 @@ fn render_some(user_config: &UserConfig, files_changed: &Vec<PathBuf>) {
         }
     });
 
-    match consolidate_into_homepage::create_homepage(&user_config) {
+    match consolidate_into_homepage::create_homepage(user_config) {
         Ok(_) => {}
         Err(e) => {
             eprintln!("unsuccessful in creating homepage {e}")
@@ -154,18 +152,18 @@ fn render_all(user_config: &UserConfig) {
     // rebuilding all the articles in content directory (parallel)
     article_names.par_iter().for_each(|article_name| {
         let user_config_for_threads = user_config.clone();
-        match parse_one_article::markdown_to_styled_html(&article_name, &user_config_for_threads) {
+        match parse_one_article::markdown_to_styled_html(article_name, &user_config_for_threads) {
             Ok(_) => log_info(format!("\tparsed  {article_name} successfully")),
             Err(e) => {
-                eprintln!("unsuccessful parse for {article_name} {}", e)
+                eprintln!("unsuccessful parse for {article_name} {e}")
             }
         }
     });
     log_info("generated all html pages");
-    match consolidate_into_homepage::create_homepage(&user_config) {
+    match consolidate_into_homepage::create_homepage(user_config) {
         Ok(_) => log_info("added all blogs to homepage, view in dist/index.html"),
         Err(e) => {
-            eprintln!("unsuccessful in creating homepage {}", e)
+            eprintln!("unsuccessful in creating homepage {e}")
         }
     };
 }

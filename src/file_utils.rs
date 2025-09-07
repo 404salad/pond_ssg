@@ -59,14 +59,14 @@ pub fn read_directory_content() -> Vec<String> {
                         }
                     }
                     Err(err) => {
-                        eprintln!("Error reading directory entry: {}", err);
+                        eprintln!("Error reading directory entry: {err}");
                         continue;
                     }
                 }
             }
         }
         Err(err) => {
-            eprintln!("Error reading directory: {}", err);
+            eprintln!("Error reading directory: {err}");
         }
     };
     //println!("{article_names:?}");
@@ -158,7 +158,7 @@ pub fn no_folder_level_changes(latest_change_time: &mut SystemTime) -> bool {
             meta
         }
         Err(e) => {
-            eprintln!("Failed to read content metadata: {}", e);
+            eprintln!("Failed to read content metadata: {e}");
             return false;
         }
     };
@@ -166,10 +166,10 @@ pub fn no_folder_level_changes(latest_change_time: &mut SystemTime) -> bool {
     // TODO: check compatibiliy before the first run to avoid matching for errors in unwrap
     let time = metadata.accessed().unwrap();
     if *latest_change_time == time {
-        return true;
+        true
     } else {
         *latest_change_time = time;
-        return false;
+        false
     }
 }
 
@@ -184,15 +184,13 @@ pub fn has_content_dir() -> bool {
 pub fn delete_dir_contents(read_dir_res: Result<ReadDir>) {
     log_info("Removing previous content");
     if let Ok(dir) = read_dir_res {
-        for entry in dir {
-            if let Ok(entry) = entry {
-                let path = entry.path();
-                if path.is_dir() {
-                    fs::remove_dir_all(path).expect("Failed to remove a dir");
-                } else {
-                    fs::remove_file(path).expect("Failed to remove a file");
-                }
-            };
+        for entry in dir.flatten() {
+            let path = entry.path();
+            if path.is_dir() {
+                fs::remove_dir_all(path).expect("Failed to remove a dir");
+            } else {
+                fs::remove_file(path).expect("Failed to remove a file");
+            }
         }
     };
     log_info("successfully removed previous content");
