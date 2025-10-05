@@ -22,8 +22,13 @@ pond_ssg --help
 - need to configure it such that other people can use it easier
 - customization options without sacrificing simplicity  
 
-## next steps
+## next steps  
+
+### top priorities  
+- feat: tags support
 - fix: seo and accessibility? https://pagespeed.web.dev/analysis/https-404salad-github-io-blog
+
+### other  
 - refactor: cli so it's easier to set up and manage projects
 - docs: a simple setup guide so that users can simply install binaries and potential instructions
 - feat: add custom themes

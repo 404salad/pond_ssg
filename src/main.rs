@@ -13,7 +13,7 @@ use std::time::SystemTime;
 
 use crate::logger::{log_info, set_log_level};
 
-fn main() {
+fn main() -> ! {
     let cl_config = config::read_cl_args();
 
     if cl_config.help {
@@ -66,6 +66,7 @@ A simple cli tool to convert markdown to blog
 ",
     );
 
+    cl_config.match
     if cl_config.watcher {
         // setting initial time for watching changes
         let mut folder_level_change_time = SystemTime::now();
