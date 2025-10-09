@@ -136,10 +136,9 @@ fn render_all(user_config: &UserConfig) {
     println!("Generating html for all the articles -> ");
 
     // rebuilding all the articles in content directory (parallel)
-    //article_names.par_iter().for_each(|article_name| {
-    article_names.into_iter().for_each(|article_name| {
+    article_names.par_iter().for_each(|article_name| {
         let user_config_for_threads = user_config;
-        match parse_one_article::markdown_to_styled_html(&article_name, user_config_for_threads) {
+        match parse_one_article::markdown_to_styled_html(article_name, user_config_for_threads) {
             Ok(_) => println!("\tparsed  {article_name} successfully"),
             Err(e) => {
                 eprintln!("unsuccessful parse for {article_name} {e}")
