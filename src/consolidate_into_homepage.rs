@@ -1,11 +1,11 @@
 use crate::config;
-use crate::file_utils::read_directory_content;
+use crate::file_utils::read_generated_filepaths;
 use maud::{html, Markup, PreEscaped, DOCTYPE};
 use std::fs::File;
 use std::io::Write;
 
 pub fn create_homepage(user_config: &config::UserConfig) -> std::io::Result<()> {
-    let article_names = read_directory_content();
+    let article_names = read_generated_filepaths();
     let output_path = "dist/index.html";
 
     let document: Markup = html! {
@@ -17,7 +17,6 @@ pub fn create_homepage(user_config: &config::UserConfig) -> std::io::Result<()> 
                 link rel="stylesheet" href="style.css";
                 script {
                     (PreEscaped(r#"
-                        console.log('do');
                         function filterArticles() {
                             var input, filter, articleList, articles, article, title, i, titleText;
                             input = document.getElementById('search');
@@ -46,10 +45,10 @@ pub fn create_homepage(user_config: &config::UserConfig) -> std::io::Result<()> 
                 input type="search" id="search" name="search" placeholder="Type to search..." onkeyup="filterArticles()";
                 br; br;
                 section id="articleList" {
-                    @for article_name in &article_names {
+                    @for article in &article_names {
                         article {
-                            a href=(format!("articles/{}.html", article_name)) {
-                                (article_name)
+                            a href=("articles/".to_owned() + article) {
+                                (article)
                             }
                         }
                     }

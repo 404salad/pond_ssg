@@ -1,7 +1,6 @@
 mod config;
 mod consolidate_into_homepage;
 mod file_utils;
-pub mod logger;
 mod parse_one_article;
 
 use config::UserConfig;
@@ -11,13 +10,11 @@ use std::fs;
 use std::path::PathBuf;
 use std::time::SystemTime;
 
-use crate::logger::{log_info, set_log_level};
-
-fn main() -> ! {
+fn main() -> anyhow::Result<()> {
     let cl_config = config::read_cl_args();
 
     if cl_config.help {
-        log_info(
+        println!(
             r#"This is a cli tool for converting markdown to blog
         Put your markdown blogs in /content
         Configure name and author in config.toml
@@ -25,36 +22,26 @@ fn main() -> ! {
         Use the --help flag for this menu
         Use the --silent flag to suppress all stdout"#,
         );
-        return;
-    }
-
-    if cl_config.silent {
-        set_log_level(logger::LogLevel::Silent);
-    } else if cl_config.debug {
-        log_info("implement this later")
-    } else {
-        set_log_level(logger::LogLevel::Normal);
+        return Ok(());
     }
 
     config::initial_setup();
     assert!(file_utils::has_content_dir());
 
-    let user_config = config::read_config().unwrap();
-    log_info(format!("User Config: \n{user_config}"));
+    let user_config = config::read_config()?;
+    println!("User Config: \n{user_config}");
 
     if user_config.code_formatting {
         if let Err(e) = file_utils::create_code_formatting_files() {
-            log_info("Error creating support files for code formatting, consider setting code_formatting off from config.toml");
-            log_info(format!("{e}"));
+            println!("Error creating support files for code formatting, consider setting code_formatting off from config.toml {e}");
         }
     } else if let Err(e) = file_utils::remove_code_formatting_files() {
-        log_info("Error removing code formatting files");
-        log_info(format!("{e}"));
+        println!("Error removing code formatting files {e}");
     }
 
     // Everything is configured
 
-    log_info(
+    println!(
         "
 ██████   ██████  ███    ██ ██████      ███████ ███████  ██████  
 ██   ██ ██    ██ ████   ██ ██   ██     ██      ██      ██       
@@ -66,7 +53,6 @@ A simple cli tool to convert markdown to blog
 ",
     );
 
-    cl_config.match
     if cl_config.watcher {
         // setting initial time for watching changes
         let mut folder_level_change_time = SystemTime::now();
@@ -100,6 +86,7 @@ A simple cli tool to convert markdown to blog
     } else {
         render_all(&user_config);
     }
+    Ok(())
 }
 
 fn render_some(user_config: &UserConfig, files_changed: &[PathBuf]) {
@@ -117,13 +104,11 @@ fn render_some(user_config: &UserConfig, files_changed: &[PathBuf]) {
         .map(String::from)
         .collect();
 
-    log_info(format!(
-        "Generating html for modified articles -> {article_names:?} blogs"
-    ));
+    println!("Generating html for modified articles -> {article_names:?} blogs");
 
     article_names.par_iter().for_each(|article_name| {
-        let user_config_for_threads = user_config.clone();
-        match parse_one_article::markdown_to_styled_html(article_name, &user_config_for_threads) {
+        let user_config_for_threads = user_config;
+        match parse_one_article::markdown_to_styled_html(article_name, user_config_for_threads) {
             Ok(_) => {}
             Err(e) => {
                 eprintln!(" unsuccessful parse for {article_name}: {e}")
@@ -148,21 +133,22 @@ fn render_all(user_config: &UserConfig) {
 
     let article_names = file_utils::read_directory_content();
 
-    log_info("Generating html for all the articles -> ");
+    println!("Generating html for all the articles -> ");
 
     // rebuilding all the articles in content directory (parallel)
-    article_names.par_iter().for_each(|article_name| {
-        let user_config_for_threads = user_config.clone();
-        match parse_one_article::markdown_to_styled_html(article_name, &user_config_for_threads) {
-            Ok(_) => log_info(format!("\tparsed  {article_name} successfully")),
+    //article_names.par_iter().for_each(|article_name| {
+    article_names.into_iter().for_each(|article_name| {
+        let user_config_for_threads = user_config;
+        match parse_one_article::markdown_to_styled_html(&article_name, user_config_for_threads) {
+            Ok(_) => println!("\tparsed  {article_name} successfully"),
             Err(e) => {
                 eprintln!("unsuccessful parse for {article_name} {e}")
             }
         }
     });
-    log_info("generated all html pages");
+    println!("generated all html pages");
     match consolidate_into_homepage::create_homepage(user_config) {
-        Ok(_) => log_info("added all blogs to homepage, view in dist/index.html"),
+        Ok(_) => println!("added all blogs to homepage, view in dist/index.html"),
         Err(e) => {
             eprintln!("unsuccessful in creating homepage {e}")
         }
