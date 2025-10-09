@@ -2,9 +2,7 @@ use super::config;
 use maud::{html, Markup, DOCTYPE};
 use pulldown_cmark::{html, Options, Parser};
 use std::fs::File;
-use std::io::prelude::*;
-use std::io::{BufReader, Error, Write};
-use std::path::Path;
+use std::io::{BufReader, Error, Read, Write};
 
 // parse markdown to html
 fn parse_markdown(input: &str) -> String {
@@ -15,7 +13,7 @@ fn parse_markdown(input: &str) -> String {
     html_output
 }
 
-fn read_markdown<P: AsRef<Path>>(path: P) -> Result<String, Error> {
+fn read_markdown(path: String) -> Result<String, Error> {
     let input = File::open(path)?;
     let mut buffered = BufReader::new(input);
     let mut markdown_input = String::new();
@@ -56,10 +54,8 @@ pub fn markdown_to_styled_html(
     article: &str,
     user_config: &config::UserConfig,
 ) -> std::io::Result<()> {
-    let mut input_path = String::from("content/") + article;
-    let mut output_path = String::from("dist/articles/") + article;
-    input_path.push_str(".md");
-    output_path.push_str(".html");
+    let input_path = String::from("content/") + article + ".md";
+    let output_path = String::from("dist/articles/") + article + ".html";
     let html_from_md = parse_markdown(&read_markdown(input_path)?);
     let mut file = File::create(output_path)?;
     let wrapped_html = wrap_html(&html_from_md, article, user_config);
@@ -75,7 +71,7 @@ mod tests {
     #[test]
     fn test_parse_markdown() {
         let markdown_input = "# moon";
-        let html_output = parse_markdown(&markdown_input);
+        let html_output = parse_markdown(markdown_input);
         assert_eq!(html_output, "<h1>moon</h1>\n");
     }
 }

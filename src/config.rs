@@ -34,7 +34,6 @@ pub struct CommandLineArgs {
     pub watcher: bool,
     pub help: bool,
     pub silent: bool,
-    pub debug: bool,
 }
 
 pub fn initial_setup() {
@@ -109,7 +108,6 @@ pub fn read_cl_args() -> CommandLineArgs {
     let mut watcher = false;
     let mut help = false;
     let mut silent = false;
-    let mut debug = false;
     for arg in args {
         if arg.trim().starts_with("--watch") {
             watcher = true;
@@ -117,14 +115,11 @@ pub fn read_cl_args() -> CommandLineArgs {
             help = true;
         } else if arg.trim().starts_with("--silent") {
             silent = true;
-        } else if arg.trim().starts_with("--debug") {
-            debug = true;
         }
     }
     CommandLineArgs {
         watcher,
         help,
         silent,
-        debug,
     }
 }

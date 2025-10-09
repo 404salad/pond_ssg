@@ -1,4 +1,3 @@
-use crate::logger::log_info;
 use std::collections::HashMap;
 use std::env;
 use std::fs;
@@ -27,7 +26,7 @@ fn exclude_drafts(articles: Vec<String>) -> Vec<String> {
 
     for article in articles {
         if article.starts_with("_") {
-            log_info(format!("ignoring drafts: {article}"))
+            println!("ignoring drafts: {article}")
         } else {
             filtered_articles.push(article);
         }
@@ -73,13 +72,13 @@ pub fn read_directory_content() -> Vec<String> {
     article_names.sort_by_key(|k| time_of_creation(format!("content/{k}.md")));
     article_names.reverse();
 
-    article_names = exclude_drafts(article_names.clone());
+    article_names = exclude_drafts(article_names);
     article_names
 }
 
 /// copy image files from the current directory to the `dist/articles` directory.
 pub fn copy_image_files() -> io::Result<()> {
-    log_info("copying static assets (images)");
+    println!("copying static assets (images)");
     let target_dir = Path::new("dist/articles");
     fs::create_dir_all(target_dir)?;
     let image_extensions = ["png", "jpg", "jpeg", "gif", "bmp"];
@@ -91,11 +90,7 @@ pub fn copy_image_files() -> io::Result<()> {
                 if image_extensions.contains(&ext.to_lowercase().as_str()) {
                     let target_path = target_dir.join(path.file_name().unwrap());
                     fs::copy(&path, &target_path).unwrap();
-                    log_info(format!(
-                        "\tCopied: {} -> {}",
-                        path.display(),
-                        target_path.display()
-                    ));
+                    println!("\tCopied: {} -> {}", path.display(), target_path.display());
                 }
             }
         }
@@ -164,7 +159,7 @@ pub fn no_folder_level_changes(latest_change_time: &mut SystemTime) -> bool {
     };
 
     // TODO: check compatibiliy before the first run to avoid matching for errors in unwrap
-    let time = metadata.accessed().unwrap();
+    let time = metadata.accessed().expect("platform not supported");
     if *latest_change_time == time {
         true
     } else {
@@ -182,7 +177,7 @@ pub fn has_content_dir() -> bool {
 }
 
 pub fn delete_dir_contents(read_dir_res: Result<ReadDir>) {
-    log_info("Removing previous content");
+    println!("Removing previous content");
     if let Ok(dir) = read_dir_res {
         for entry in dir.flatten() {
             let path = entry.path();
@@ -193,7 +188,7 @@ pub fn delete_dir_contents(read_dir_res: Result<ReadDir>) {
             }
         }
     };
-    log_info("successfully removed previous content");
+    println!("successfully removed previous content");
 }
 
 pub fn create_code_formatting_files() -> std::io::Result<()> {
@@ -225,6 +220,6 @@ mod tests {
 
     #[test]
     fn test_has_content_dir() {
-        assert_eq!(has_content_dir(), true);
+        assert!(has_content_dir());
     }
 }
