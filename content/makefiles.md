@@ -1,4 +1,8 @@
-## Quick and Easy Makefile Guide
+```toml
+title = "Quick and Easy Makefile Guide"
+tags = ["ci","c"]
+date = 2025-04-20
+```
 
 
 Begin by crafting a file named `Makefile` – the control center for your project's build rules.

@@ -1,3 +1,9 @@
+```toml
+title = "Every Programmer should watch conference talks"
+tags = ["media","tech-talks"] 
+date = 2025-04-20
+```
+
 I was going to write a longer article to convince everyone to watch the conferences but Its much better to give a summary of my favorite talks and hopefully that will be persuasive enough~
 
 ### ["The Tragedy of systemd" - Benno Rice](https://www.youtube.com/watch?v=o_AIw9bGogo)

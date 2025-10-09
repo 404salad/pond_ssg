@@ -3,7 +3,7 @@ use maud::{html, Markup, DOCTYPE};
 use pulldown_cmark::{html, Options, Parser};
 use serde::Deserialize;
 use std::fs::File;
-use std::io::{BufRead, BufReader, Error, Read, Write};
+use std::io::Write;
 use toml::value::Datetime;
 
 #[derive(Debug, Deserialize)]
@@ -55,8 +55,6 @@ date = 2025-04-20
             return Err(e.into());
         }
     };
-
-    dbg!(&metadata);
 
     //Ok((meta, markdown_input))
     Ok((metadata, markdown_blog))
