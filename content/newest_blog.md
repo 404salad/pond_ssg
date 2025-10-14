@@ -1,3 +1,9 @@
+```toml
+title = "random blog"
+tags = ["ci","random"]
+date = 2025-04-20
+```
+
 we can see that this is the one on top!  
 --- 
 we can go over this  

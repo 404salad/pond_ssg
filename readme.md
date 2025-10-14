@@ -24,8 +24,9 @@ pond_ssg --help
 
 ## next steps  
 
-### top priorities  
-- feat: tags support
+### now priorities  
+- feat: clickable, searchable tags
+- use -> use date to sort instead of os timestamps
 - fix: seo and accessibility? https://pagespeed.web.dev/analysis/https-404salad-github-io-blog
 
 ### other  

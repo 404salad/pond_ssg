@@ -1,3 +1,8 @@
+```toml
+title = "Debugging C++ programms with gdb"
+tags = ["tag1","tag2"]
+date = 2025-04-20
+```
 
 If you don't use GDB but program in C/C++, you are missing out on a powerful debugging tool. Here's a quick 5-minute tutorial to get you started.
 

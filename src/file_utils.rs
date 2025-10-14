@@ -21,6 +21,25 @@ pub fn content_directory_files() -> Vec<PathBuf> {
     paths
 }
 
+pub fn read_generated_filepaths() -> Vec<String> {
+    let paths_result = match fs::read_dir("dist/articles") {
+        Ok(paths) => paths,
+        Err(e) => {
+            eprintln!("couldnt read content directory: {e}");
+            return vec![];
+        }
+    };
+    let paths: Vec<String> = paths_result
+        .filter_map(|entry| {
+            entry
+                .ok()
+                .filter(|x| x.path().extension().is_some_and(|x| x == "html"))
+                .map(|e| e.file_name().into_string().unwrap())
+        })
+        .collect();
+    paths
+}
+
 fn exclude_drafts(articles: Vec<String>) -> Vec<String> {
     let mut filtered_articles: Vec<String> = vec![];
 

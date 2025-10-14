@@ -19,8 +19,7 @@ fn main() -> anyhow::Result<()> {
         Put your markdown blogs in /content
         Configure name and author in config.toml
         Use the --watch flag for auto-running on detecting changes
-        Use the --help flag for this menu
-        Use the --silent flag to suppress all stdout"#,
+        Use the --help flag for this menu"#,
         );
         return Ok(());
     }

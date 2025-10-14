@@ -1,3 +1,9 @@
+```toml
+title = "how to use cronjobs"
+tags = ["tag1","tag2"]
+date = 2025-04-20
+```
+
 > running stuff in the background at a specified time is awesome
 
 I forget to backup my files and so i use cron to do it for me.  
@@ -26,5 +32,3 @@ use this command format examples for cronjobs
 |45 | 3  | 10  | *   | *   | 3:45 AM on the 10th                |
 |59 | 23 | 31  | 12  | *   | 11:59 PM on December 31st         |
 
-
-# thank you for not judging judy

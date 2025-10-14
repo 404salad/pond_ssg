@@ -1,3 +1,9 @@
+```toml
+title = "On logging"
+tags = ["code"] 
+date = 2025-04-20
+```
+
 > just log everything 
 
 Seems like a good idea. Storage is cheap, logs help debug, and they are useful in incident response, where all information you can get your hands on matters. But logs come with their downsides. Unprotected logs are a treasure trove of information to hackers and provide deep insight into how a system works.
