@@ -82,12 +82,15 @@ fn wrap_html(
                 @if user_config.code_formatting {
                     script src="../prism.js" {}
                 }
+                " "
                 h1 { (meta.title) }
+
                 @if !meta.tags.is_empty() {
-                    "tags: "
-                        @for tag in &meta.tags {
-                            span { (tag) }" "
-                        }
+                    span { (meta.date) } " | "
+                    @for tag in &meta.tags {
+                        span { (tag) }" "
+                    }
+                    //": "
                 }
                 hr;
                 // raw HTML from markdown
@@ -107,8 +110,6 @@ pub fn markdown_to_styled_html(
     let input_path = String::from("content/") + article + ".md";
     let output_path = String::from("dist/articles/") + article + ".html";
     let (metadata, file_data) = read_file_and_metadata(input_path)?;
-
-    //let tags_from_md: Vec<String> = parse_tags(input_path);
 
     let html_from_md = parse_markdown(&file_data);
     let mut file = File::create(output_path)?;
