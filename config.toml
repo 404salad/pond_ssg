@@ -1,3 +1,7 @@
-author_name = "salad"
-blog_name = "404salad's blog"
-code_formatting = true
+author_name = """
+404salad
+"""
+blog_name = """
+pondblog
+"""
+code_formatting = false

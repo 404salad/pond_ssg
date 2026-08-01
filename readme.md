@@ -38,6 +38,7 @@ pond_ssg --help
 - test: write tests
 - feat: add an option to enable basic analytics 
 - feat: somehow add mailing list support
+- feat: somehow add rss support
 - clean: move images to a static folder inside dist instead of at root
 - (done) todo: make it availabe in cargo (crates.io) ie. write the docstrings and then cargo publish
 - (done) feat: figure out a drafts system (when a filename starts with an undescore consider it to be a draft?)

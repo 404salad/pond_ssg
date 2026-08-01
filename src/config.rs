@@ -3,6 +3,7 @@
  * just create a template file which the user can open and fill in
  * create a --config thing so that user can override file name if needed
  * */
+use anyhow::Context;
 use serde::{Deserialize, Serialize};
 use std::env;
 use std::fmt;
@@ -36,30 +37,21 @@ pub struct CommandLineArgs {
     pub silent: bool,
 }
 
-pub fn initial_setup() {
-    if let Err(err) = create_project_files() {
-        eprintln!("Could not create project files {err}")
-    }
-
-    // only run config setup if the config file doesn't exist
-    if Path::new("config.toml").exists() {
-        return;
-    }
+pub fn initial_setup() -> anyhow::Result<()> {
+    create_project_files()?;
 
     // taking user input
     print!("enter your name > ");
-    io::stdout().flush().expect("flush failed");
+    io::stdout().flush()?;
+
     let mut author_name = String::new();
-    io::stdin()
-        .read_line(&mut author_name)
-        .expect("readline failed");
+    io::stdin().read_line(&mut author_name)?;
 
     print!("enter blog name > ");
-    io::stdout().flush().expect("flush failed");
+    io::stdout().flush()?;
+
     let mut blog_name = String::new();
-    io::stdin()
-        .read_line(&mut blog_name)
-        .expect("readline failed");
+    io::stdin().read_line(&mut blog_name)?;
 
     let user = UserConfig {
         author_name,
@@ -67,23 +59,20 @@ pub fn initial_setup() {
         code_formatting: false, // set to false
     };
 
-    let toml_config: String = match toml::to_string(&user) {
-        Ok(config_str) => config_str,
-        Err(why) => panic!("invalid config file due to {why}"),
-    };
+    let toml_config = toml::to_string(&user).context("invalid config file")?;
 
     // writing to config file
     let config_path = Path::new("config.toml");
 
-    let mut config_file = match fs::File::create(config_path) {
-        Err(why) => panic!("cant create config file because {why}"),
-        Ok(file) => file,
-    };
+    let mut config_file = fs::File::create(config_path).context("cant create config file")?;
 
-    match config_file.write_all(toml_config.as_bytes()) {
-        Err(why) => panic!("cant write to config file because {why}"),
-        Ok(_) => println!("successfully created config file"),
-    }
+    config_file
+        .write_all(toml_config.as_bytes())
+        .context("cant write to config file")?;
+
+    println!("successfully created config file");
+
+    Ok(())
 }
 
 pub fn read_config() -> Result<UserConfig, toml::de::Error> {
@@ -92,6 +81,10 @@ pub fn read_config() -> Result<UserConfig, toml::de::Error> {
     let config: UserConfig = toml::from_str(&config_file_data)?;
 
     Ok(config)
+}
+
+pub fn config_exists() -> bool {
+    Path::new("config.toml").exists()
 }
 
 fn create_project_files() -> io::Result<()> {

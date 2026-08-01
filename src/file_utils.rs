@@ -1,8 +1,8 @@
+use anyhow::Context;
 use std::collections::HashMap;
 use std::env;
 use std::fs;
 use std::fs::ReadDir;
-use std::io;
 use std::io::Result;
 use std::path::{Path, PathBuf};
 use std::time::SystemTime;
@@ -21,31 +21,34 @@ pub fn content_directory_files() -> Vec<PathBuf> {
     paths
 }
 
-pub fn read_generated_filepaths() -> Vec<String> {
+pub fn read_generated_filepaths() -> anyhow::Result<Vec<String>> {
     let paths_result = match fs::read_dir("dist/articles") {
         Ok(paths) => paths,
         Err(e) => {
             eprintln!("couldnt read content directory: {e}");
-            return vec![];
+            return Ok(vec![]);
         }
     };
-    let paths: Vec<String> = paths_result
-        .filter_map(|entry| {
-            entry
-                .ok()
-                .filter(|x| x.path().extension().is_some_and(|x| x == "html"))
-                .map(|e| e.file_name().into_string().unwrap())
-        })
-        .collect();
-    paths
+    let mut file_names = vec![];
+    for path in paths_result {
+        let file_name = {
+            let f = path?;
+            f.file_name()
+        };
+        if let Some(file) = file_name.to_str() {
+            file_names.push(file.to_string());
+        }
+    }
+
+    Ok(file_names)
 }
 
 fn exclude_drafts(articles: Vec<String>) -> Vec<String> {
     let mut filtered_articles: Vec<String> = vec![];
 
     for article in articles {
-        if article.starts_with("_") {
-            println!("ignoring drafts: {article}")
+        if article.starts_with('_') {
+            println!("ignoring drafts: {article}");
         } else {
             filtered_articles.push(article);
         }
@@ -64,7 +67,10 @@ pub fn read_directory_content() -> Vec<String> {
                 match path_result {
                     Ok(path) => {
                         if let Some(path_str) = path.path().to_str() {
-                            if path_str.ends_with(".md") {
+                            if std::path::Path::new(path_str)
+                                .extension()
+                                .is_some_and(|ext| ext.eq_ignore_ascii_case("md"))
+                            {
                                 article_names.push(
                                     path_str
                                         .trim_start_matches("content/")
@@ -78,7 +84,6 @@ pub fn read_directory_content() -> Vec<String> {
                     }
                     Err(err) => {
                         eprintln!("Error reading directory entry: {err}");
-                        continue;
                     }
                 }
             }
@@ -86,7 +91,7 @@ pub fn read_directory_content() -> Vec<String> {
         Err(err) => {
             eprintln!("Error reading directory: {err}");
         }
-    };
+    }
     //println!("{article_names:?}");
     article_names.sort_by_key(|k| time_of_creation(format!("content/{k}.md")));
     article_names.reverse();
@@ -96,7 +101,7 @@ pub fn read_directory_content() -> Vec<String> {
 }
 
 /// copy image files from the current directory to the `dist/articles` directory.
-pub fn copy_image_files() -> io::Result<()> {
+pub fn copy_image_files() -> anyhow::Result<()> {
     println!("copying static assets (images)");
     let target_dir = Path::new("dist/articles");
     fs::create_dir_all(target_dir)?;
@@ -107,8 +112,9 @@ pub fn copy_image_files() -> io::Result<()> {
         if path.is_file() {
             if let Some(ext) = path.extension().and_then(|ext| ext.to_str()) {
                 if image_extensions.contains(&ext.to_lowercase().as_str()) {
-                    let target_path = target_dir.join(path.file_name().unwrap());
-                    fs::copy(&path, &target_path).unwrap();
+                    let file_name = path.file_name().context("path has no file name")?;
+                    let target_path = target_dir.join(file_name);
+                    fs::copy(&path, &target_path)?;
                     println!("\tCopied: {} -> {}", path.display(), target_path.display());
                 }
             }
@@ -118,12 +124,20 @@ pub fn copy_image_files() -> io::Result<()> {
 }
 
 pub fn time_of_creation(path: String) -> SystemTime {
-    let time: SystemTime = SystemTime::now();
-    match fs::metadata(path) {
-        Ok(data) => data
-            .created()
-            .expect("chrnological sorting not supported on this platform"),
-        Err(_) => time,
+    let time_now: SystemTime = SystemTime::now();
+    let file_metadata = match fs::metadata(path) {
+        Ok(it) => it,
+        Err(err) => {
+            println!("problem reading file metadata for time :{err}");
+            return time_now;
+        }
+    };
+    match file_metadata.created() {
+        Ok(t) => t,
+        Err(e) => {
+            println!("warn: time of creation not supported on this platform {e}");
+            time_now
+        }
     }
 }
 
@@ -148,10 +162,10 @@ pub fn files_changed(latest_change_times: &mut HashMap<PathBuf, SystemTime>) -> 
         .clone()
         .into_iter()
         .filter_map(|(path, time)| {
-            if latest_change_times.get(&path) != Some(&time) {
-                Some(path)
-            } else {
+            if latest_change_times.get(&path) == Some(&time) {
                 None
+            } else {
+                Some(path)
             }
         })
         .collect();
@@ -162,52 +176,49 @@ pub fn files_changed(latest_change_times: &mut HashMap<PathBuf, SystemTime>) -> 
 }
 // TODO: GO THROUGH THE FILES AND STORE THEIR INITIAL VALUES, THEN CHECK FOR CHANGES
 
-pub fn no_folder_level_changes(latest_change_time: &mut SystemTime) -> bool {
+pub fn no_folder_level_changes(latest_change_time: &mut SystemTime) -> anyhow::Result<bool> {
     let metadata = match fs::metadata("content") {
         Ok(meta) => {
             if !meta.is_dir() {
                 eprintln!("Error: content is not a directory");
-                return false;
+                return Ok(false);
             }
             meta
         }
         Err(e) => {
             eprintln!("Failed to read content metadata: {e}");
-            return false;
+            return Ok(false);
         }
     };
 
     // TODO: check compatibiliy before the first run to avoid matching for errors in unwrap
-    let time = metadata.accessed().expect("platform not supported");
+    let time = metadata.accessed()?;
     if *latest_change_time == time {
-        true
+        Ok(true)
     } else {
         *latest_change_time = time;
-        false
+        Ok(false)
     }
 }
 
 pub fn has_content_dir() -> bool {
-    if let Ok(current_directory) = env::current_dir() {
-        current_directory.join("content").exists()
-    } else {
-        false
-    }
+    env::current_dir().is_ok_and(|current_directory| current_directory.join("content").exists())
 }
 
-pub fn delete_dir_contents(read_dir_res: Result<ReadDir>) {
+pub fn delete_dir_contents(read_dir_res: Result<ReadDir>) -> anyhow::Result<()> {
     println!("Removing previous content");
     if let Ok(dir) = read_dir_res {
         for entry in dir.flatten() {
             let path = entry.path();
             if path.is_dir() {
-                fs::remove_dir_all(path).expect("Failed to remove a dir");
+                fs::remove_dir_all(path)?;
             } else {
-                fs::remove_file(path).expect("Failed to remove a file");
+                fs::remove_file(path)?;
             }
         }
-    };
+    }
     println!("successfully removed previous content");
+    Ok(())
 }
 
 pub fn create_code_formatting_files() -> std::io::Result<()> {

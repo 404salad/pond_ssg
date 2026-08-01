@@ -22,9 +22,9 @@ fn parse_markdown(input: &str) -> String {
     html_output
 }
 
-fn read_file_and_metadata(path: String) -> anyhow::Result<(Metadata, String), anyhow::Error> {
+fn read_file_and_metadata(path: &str) -> anyhow::Result<(Metadata, String), anyhow::Error> {
     // TODO: efficiency
-    let mut lines: Vec<String> = std::fs::read_to_string(&path)
+    let mut lines: Vec<String> = std::fs::read_to_string(path)
         .expect("lines conversion failed")
         .lines()
         .map(String::from)
@@ -37,7 +37,7 @@ fn read_file_and_metadata(path: String) -> anyhow::Result<(Metadata, String), an
     let markdown_blog = markdown_blog_a.join("\n");
     // TODO: this is so hacky fix it maybe
     // also make it have a version for backwards compatability maybe
-    let meta = &metadata_a[1..4].join("\n");
+    let meta = &metadata_a.get(1..4).unwrap().join("\n");
 
     let metadata: Metadata = match toml::from_str::<Metadata>(meta) {
         Ok(m) => m,
@@ -62,7 +62,7 @@ date = 2025-04-20
 
 fn wrap_html(
     markdown_output: &str,
-    meta: Metadata,
+    meta: &Metadata,
     article: &str,
     user_config: &config::UserConfig,
 ) -> String {
@@ -109,11 +109,11 @@ pub fn markdown_to_styled_html(
 ) -> anyhow::Result<(), anyhow::Error> {
     let input_path = String::from("content/") + article + ".md";
     let output_path = String::from("dist/articles/") + article + ".html";
-    let (metadata, file_data) = read_file_and_metadata(input_path)?;
+    let (metadata, file_data) = read_file_and_metadata(&input_path)?;
 
     let html_from_md = parse_markdown(&file_data);
     let mut file = File::create(output_path)?;
-    let wrapped_html = wrap_html(&html_from_md, metadata, article, user_config);
+    let wrapped_html = wrap_html(&html_from_md, &metadata, article, user_config);
     write!(file, "{wrapped_html}")?;
     Ok(())
 }
